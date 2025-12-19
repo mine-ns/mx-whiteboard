@@ -8689,6 +8689,10 @@ class App extends React.Component<AppProps, AppState> {
       | "iframe"
       | "embeddable",
   ) {
+    // Always use sharp edges for embeddable and iframe elements
+    if (elementType === "embeddable" || elementType === "iframe") {
+      return null;
+    }
     return this.state.currentItemRoundness === "round"
       ? {
           type: isUsingAdaptiveRadius(elementType)
