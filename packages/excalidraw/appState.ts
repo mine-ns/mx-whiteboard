@@ -25,7 +25,7 @@ export const getDefaultAppState = (): Omit<
 > => {
   return {
     showWelcomeScreen: false,
-    theme: THEME.LIGHT,
+    theme: THEME.DARK,
     collaborators: new Map(),
     currentChartType: "bar",
     currentItemBackgroundColor: DEFAULT_ELEMENT_PROPS.backgroundColor,
@@ -37,8 +37,8 @@ export const getDefaultAppState = (): Omit<
     currentItemRoughness: DEFAULT_ELEMENT_PROPS.roughness,
     currentItemStartArrowhead: null,
     currentItemStrokeColor: DEFAULT_ELEMENT_PROPS.strokeColor,
-    currentItemRoundness: isTestEnv() ? "sharp" : "round",
-    currentItemArrowType: ARROW_TYPE.round,
+    currentItemRoundness: "sharp",
+    currentItemArrowType: ARROW_TYPE.elbow,
     currentItemStrokeStyle: DEFAULT_ELEMENT_PROPS.strokeStyle,
     currentItemStrokeWidth: DEFAULT_ELEMENT_PROPS.strokeWidth,
     currentItemTextAlign: DEFAULT_TEXT_ALIGN,

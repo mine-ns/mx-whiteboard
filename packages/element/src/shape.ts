@@ -455,7 +455,7 @@ export const generateLinearCollisionShape = (
         : [pointFrom<LocalPoint>(0, 0)];
 
       if (isElbowArrow(element)) {
-        return generator.path(generateElbowArrowShape(points, 16), options)
+        return generator.path(generateElbowArrowShape(points, 0), options)
           .sets[0].ops;
       } else if (!element.roundness) {
         return points.map((point, idx) => {
@@ -744,7 +744,7 @@ const generateElementShape = (
         } else {
           shape = [
             generator.path(
-              generateElbowArrowShape(points, 16),
+              generateElbowArrowShape(points, 0),
               generateRoughOptions(element, true),
             ),
           ];
