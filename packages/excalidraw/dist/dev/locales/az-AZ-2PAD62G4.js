@@ -1,0 +1,744 @@
+import "../chunk-XDFCUUT6.js";
+
+// locales/az-AZ.json
+var labels = {
+  paste: "Yap\u0131\u015Fd\u0131r",
+  pasteAsPlaintext: "D\xFCz m\u0259tn kimi yap\u0131\u015Fd\u0131r\u0131n",
+  pasteCharts: "Diaqramlar\u0131 yap\u0131\u015Fd\u0131r\u0131n",
+  selectAll: "Ham\u0131s\u0131n\u0131 se\xE7",
+  multiSelect: "Se\xE7im\u0259 element \u0259lav\u0259 edin",
+  moveCanvas: "Kanvas\u0131 k\xF6\xE7\xFCr\xFCn",
+  cut: "K\u0259s",
+  copy: "Kopyala",
+  copyAsPng: "PNG olaraq panoya kopyala",
+  copyAsSvg: "SVG olaraq panoya kopyala",
+  copyText: "M\u0259tn olaraq panoya kopyala",
+  copySource: "M\u0259nb\u0259ni kopyala",
+  convertToCode: "Koda \xE7evir",
+  bringForward: "\xD6n\u0259 da\u015F\u0131",
+  sendToBack: "Geriy\u0259 g\xF6nd\u0259rin",
+  bringToFront: "\xD6n\u0259 g\u0259tirin",
+  sendBackward: "Geriy\u0259 g\xF6nd\u0259rin",
+  delete: "Sil",
+  copyStyles: "Still\u0259ri kopyalay\u0131n",
+  pasteStyles: "Still\u0259ri yap\u0131\u015Fd\u0131r\u0131n",
+  stroke: "Strok r\u0259ngi",
+  changeStroke: "\u015Etrix r\u0259ngini d\u0259yi\u015Fdir",
+  background: "Arxa fon",
+  changeBackground: "Fon r\u0259ngini d\u0259yi\u015Fdir",
+  fill: "Doldur",
+  strokeWidth: "Strok eni",
+  strokeStyle: "Strok stili",
+  strokeStyle_solid: "Qat\u0131",
+  strokeStyle_dashed: "K\u0259sik",
+  strokeStyle_dotted: "N\xF6qt\u0259li",
+  sloppiness: "S\u0259liq\u0259sizlik",
+  opacity: "\u015E\u0259ffafl\u0131q",
+  textAlign: "M\u0259tni uy\u011Funla\u015Fd\u0131r",
+  edges: "K\u0259narlar",
+  sharp: "K\u0259skin",
+  round: "D\u0259yirmi",
+  arrowheads: "Ox uclar\u0131",
+  arrowhead_none: "He\xE7 biri",
+  arrowhead_arrow: "Ox",
+  arrowhead_bar: "\xC7ubuq",
+  arrowhead_circle: "Dair\u0259",
+  arrowhead_circle_outline: "\xC7evr\u0259 (Kontur)",
+  arrowhead_triangle: "\xDC\xE7bucaq",
+  arrowhead_triangle_outline: "\xDC\xE7bucaq (kontur)",
+  arrowhead_diamond: "Almaz",
+  arrowhead_diamond_outline: "Almaz (kontur)",
+  arrowhead_crowfoot_many: "",
+  arrowhead_crowfoot_one: "",
+  arrowhead_crowfoot_one_or_many: "",
+  more_options: "",
+  arrowtypes: "",
+  arrowtype_sharp: "",
+  arrowtype_round: "",
+  arrowtype_elbowed: "",
+  fontSize: "\u015Erift \xF6l\xE7\xFCs\xFC",
+  fontFamily: "\u015Erift qrupu",
+  addWatermark: '"Made with Excalidraw" \u0259lav\u0259 et',
+  handDrawn: "\u018Fll\u0259 \xE7\u0259kilmi\u015F",
+  normal: "Normal",
+  code: "Kod",
+  small: "Ki\xE7ik",
+  medium: "Orta",
+  large: "B\xF6y\xFCk",
+  veryLarge: "\xC7ox b\xF6y\xFCk",
+  solid: "Qat\u0131",
+  hachure: "\u015Etrix",
+  zigzag: "Ziqzaq",
+  crossHatch: "\xC7arpaz d\u0259lik",
+  thin: "\u0130nc\u0259",
+  bold: "Qal\u0131n",
+  left: "Sol",
+  center: "M\u0259rk\u0259z",
+  right: "Sa\u011F",
+  extraBold: "Ekstra qal\u0131n",
+  architect: "Memar",
+  artist: "R\u0259ssam",
+  cartoonist: "Karikatura\xE7\u0131",
+  fileTitle: "Fayl ad\u0131",
+  colorPicker: "R\u0259ng se\xE7\u0259n",
+  canvasColors: "Kanvas \xFCz\u0259rind\u0259 istifad\u0259 olunur",
+  canvasBackground: "Kanvas arxa fonu",
+  drawingCanvas: "Kanvas \xE7\u0259km\u0259k",
+  clearCanvas: "L\xF6vh\u0259ni t\u0259mizl\u0259",
+  layers: "Qatlar",
+  actions: "H\u0259r\u0259k\u0259tl\u0259r",
+  language: "Dil",
+  liveCollaboration: "Canl\u0131 \u0259m\u0259kda\u015Fl\u0131q...",
+  duplicateSelection: "Dublikat",
+  untitled: "Ba\u015Fl\u0131qs\u0131z",
+  name: "Ad",
+  yourName: "Ad\u0131n\u0131z",
+  madeWithExcalidraw: "Excalidraw il\u0259 haz\u0131rlanm\u0131\u015Fd\u0131r",
+  group: "Qrup \u015F\u0259klind\u0259 se\xE7im",
+  ungroup: "Qrupsuz se\xE7im",
+  collaborators: "\u018Fm\u0259kda\u015Flar",
+  toggleGrid: "Toru d\u0259yi\u015F",
+  addToLibrary: "Kitabxanaya \u0259lav\u0259 et",
+  removeFromLibrary: "Kitabxanadan sil",
+  libraryLoadingMessage: "Kitabxana y\xFCkl\u0259nir...",
+  libraries: "Kitabxanalara bax",
+  loadingScene: "S\u0259hn\u0259 y\xFCkl\u0259nir...",
+  loadScene: "S\u0259hn\u0259ni fayldan y\xFCkl\u0259",
+  align: "Hizala",
+  alignTop: "Yuxar\u0131 hizala",
+  alignBottom: "A\u015Fa\u011F\u0131 hizala",
+  alignLeft: "Sola hizala",
+  alignRight: "Sa\u011Fa hizala",
+  centerVertically: "\u015Eaquli ortala",
+  centerHorizontally: "\xDCf\xFCqi ortala",
+  distributeHorizontally: "\xDCf\xFCqi payla",
+  distributeVertically: "\u015Eaquli payla",
+  flipHorizontal: "\xDCf\xFCqi \xE7evir",
+  flipVertical: "\u015Eaquli \xE7evir",
+  viewMode: "G\xF6r\xFCn\xFC\u015F Rejimi",
+  share: "Payla\u015F",
+  showStroke: "\xC7evr\u0259 r\u0259ng se\xE7imini g\xF6st\u0259r",
+  showBackground: "Fon r\u0259ng se\xE7imini g\xF6st\u0259r",
+  showFonts: "",
+  toggleTheme: "Gec\u0259/G\xFCzd\xFCz rejimin\u0259 d\u0259yi\u015F",
+  theme: "Fon",
+  personalLib: "\u015E\u0259xsi kitabxana",
+  excalidrawLib: "Excalidraw kitabxanas\u0131",
+  decreaseFontSize: "\u015Erift \xF6l\xE7\xFCs\xFCn\xFC azalt",
+  increaseFontSize: "\u015Erift \xF6l\xE7\xFCs\xFCn\xFC art\u0131r",
+  unbindText: "M\u0259tni \xE7\u0131xar",
+  bindText: "M\u0259tni konteyner\u0259 qo\u015F",
+  createContainerFromText: "M\u0259tni konteyner\u0259 b\xFCk",
+  link: {
+    edit: "Ke\xE7idi d\xFCz\u0259li\u015F et",
+    editEmbed: "",
+    create: "",
+    label: "Ke\xE7id",
+    labelEmbed: "",
+    empty: "",
+    hint: "",
+    goToElement: ""
+  },
+  lineEditor: {
+    edit: "",
+    editArrow: ""
+  },
+  polygon: {
+    breakPolygon: "",
+    convertToPolygon: ""
+  },
+  elementLock: {
+    lock: "",
+    unlock: "",
+    lockAll: "",
+    unlockAll: ""
+  },
+  statusPublished: "",
+  sidebarLock: "",
+  selectAllElementsInFrame: "",
+  removeAllElementsFromFrame: "",
+  eyeDropper: "",
+  textToDiagram: "",
+  prompt: "",
+  followUs: "",
+  discordChat: "",
+  zoomToFitViewport: "",
+  zoomToFitSelection: "",
+  zoomToFit: "",
+  installPWA: "",
+  autoResize: "",
+  imageCropping: "",
+  unCroppedDimension: "",
+  copyElementLink: "",
+  linkToElement: "",
+  wrapSelectionInFrame: "",
+  tab: "",
+  shapeSwitch: ""
+};
+var elementLink = {
+  title: "",
+  desc: "",
+  notFound: ""
+};
+var library = {
+  noItems: "",
+  hint_emptyLibrary: "",
+  hint_emptyPrivateLibrary: "",
+  search: {
+    inputPlaceholder: "",
+    heading: "",
+    noResults: "",
+    clearSearch: ""
+  }
+};
+var search = {
+  title: "",
+  noMatch: "",
+  singleResult: "",
+  multipleResults: "",
+  placeholder: "",
+  frames: "",
+  texts: ""
+};
+var buttons = {
+  clearReset: "",
+  exportJSON: "",
+  exportImage: "",
+  export: "",
+  copyToClipboard: "",
+  copyLink: "",
+  save: "",
+  saveAs: "",
+  load: "",
+  getShareableLink: "",
+  close: "",
+  selectLanguage: "",
+  scrollBackToContent: "",
+  zoomIn: "",
+  zoomOut: "",
+  resetZoom: "",
+  menu: "",
+  done: "",
+  edit: "",
+  undo: "",
+  redo: "",
+  resetLibrary: "",
+  createNewRoom: "",
+  fullScreen: "",
+  darkMode: "",
+  lightMode: "",
+  systemMode: "Sistem rejimi",
+  zenMode: "Zen rejimi",
+  objectsSnapMode: "Obyektl\u0259r\u0259 b\u0259rkidin",
+  exitZenMode: "Zen rejimind\u0259n \xE7\u0131x\u0131\u015F",
+  cancel: "L\u0259\u011Fv et",
+  saveLibNames: "",
+  clear: "T\u0259mizl\u0259",
+  remove: "Sil",
+  embed: "Yerl\u0259\u015Fdirm\u0259ni aktiv et",
+  publishLibrary: "",
+  submit: "G\xF6nd\u0259r",
+  confirm: "T\u0259sdiql\u0259",
+  embeddableInteractionButton: "\u018Flaq\u0259 \xFC\xE7\xFCn klikl\u0259"
+};
+var alerts = {
+  clearReset: "Bu, b\xFCt\xFCn l\xF6vh\u0259ni t\u0259mizl\u0259y\u0259c\u0259k. S\u0259n \u0259minsiniz?",
+  couldNotCreateShareableLink: "Payla\u015F\u0131la bil\u0259n ke\xE7id yaratmaq m\xFCmk\xFCn olmad\u0131.",
+  couldNotCreateShareableLinkTooBig: "Payla\u015F\u0131la bil\u0259n link yaratmaq m\xFCmk\xFCn olmad\u0131. S\u0259hn\u0259 \xE7ox b\xF6y\xFCkd\xFCr",
+  couldNotLoadInvalidFile: "Fayl\u0131 a\xE7maq m\xFCkn\xFC olmad\u0131",
+  importBackendFailed: "\u0130dxal zaman\u0131 x\u0259ta ba\u015F verdi.",
+  cannotExportEmptyCanvas: "Bo\u015F l\xF6vh\u0259ni ixrac etm\u0259k m\xFCmk\xFCn deyil.",
+  couldNotCopyToClipboard: "Kopyalana bilm\u0259di.",
+  decryptFailed: "M\u0259lumat\u0131n \u015Fifr\u0259sini a\xE7maq m\xFCmk\xFCn olmad\u0131.",
+  uploadedSecurly: "Y\xFCkl\u0259m\u0259 end-to-end \u015Fifr\u0259l\u0259m\u0259 texnologiyas\u0131 il\u0259 qorunub, y\u0259ni Excalidraw serveri v\u0259 \xFC\xE7\xFCnc\xFC t\u0259r\u0259fl\u0259r m\u0259zmunu oxuya bilm\u0259z.",
+  loadSceneOverridePrompt: "Xarici r\u0259smin y\xFCkl\u0259nm\u0259si m\xF6vcud m\u0259zmununuzu \u0259v\u0259z ed\u0259c\u0259k. Davam etm\u0259k ist\u0259yirsiniz?",
+  collabStopOverridePrompt: "Sessiyan\u0131n dayand\u0131r\u0131lmas\u0131 \u0259vv\u0259lki, yerli olaraq saxlan\u0131lan \xE7ertyojunuzun \xFCz\u0259rin\u0259 yaz\u0131lacaq. \u018Fminsiniz?",
+  errorAddingToLibrary: "Kitabxanaya \u0259lav\u0259 etm\u0259k m\xFCmk\xFCn olmad\u0131",
+  errorRemovingFromLibrary: "Kitabxanadan silm\u0259k m\xFCmk\xFCn olmad\u0131",
+  confirmAddLibrary: "Bu, kitabxanan\u0131za {{numShapes}} forma \u0259lav\u0259 ed\u0259c\u0259k. \u018Fminsiniz?",
+  imageDoesNotContainScene: "Bu t\u0259svird\u0259 he\xE7 bir s\u0259hn\u0259 m\u0259lumat\u0131 yoxdur. \u0130xrac zaman\u0131 s\u0259hn\u0259 yerl\u0259\u015Fdirm\u0259ni aktiv etmisiniz?",
+  cannotRestoreFromImage: "S\u0259hn\u0259ni bu \u015F\u0259kil fayl\u0131ndan b\u0259rpa etm\u0259k m\xFCmk\xFCn olmad\u0131",
+  invalidSceneUrl: "",
+  resetLibrary: "",
+  removeItemsFromsLibrary: "",
+  invalidEncryptionKey: "",
+  collabOfflineWarning: "",
+  localStorageQuotaExceeded: ""
+};
+var errors = {
+  unsupportedFileType: "",
+  imageInsertError: "",
+  fileTooBig: "",
+  svgImageInsertError: "",
+  failedToFetchImage: "",
+  cannotResolveCollabServer: "",
+  importLibraryError: "",
+  saveLibraryError: "",
+  collabSaveFailed: "",
+  collabSaveFailed_sizeExceeded: "",
+  imageToolNotSupported: "",
+  brave_measure_text_error: {
+    line1: "",
+    line2: "",
+    line3: "",
+    line4: ""
+  },
+  libraryElementTypeError: {
+    embeddable: "",
+    iframe: "",
+    image: ""
+  },
+  asyncPasteFailedOnRead: "",
+  asyncPasteFailedOnParse: "",
+  copyToSystemClipboardFailed: ""
+};
+var toolBar = {
+  selection: "",
+  lasso: "",
+  image: "",
+  rectangle: "",
+  diamond: "",
+  ellipse: "",
+  arrow: "",
+  line: "",
+  freedraw: "",
+  text: "",
+  library: "",
+  lock: "",
+  penMode: "",
+  link: "",
+  eraser: "",
+  frame: "",
+  magicframe: "",
+  embeddable: "",
+  laser: "",
+  hand: "",
+  extraTools: "",
+  mermaidToExcalidraw: "",
+  convertElementType: ""
+};
+var element = {
+  rectangle: "",
+  diamond: "",
+  ellipse: "",
+  arrow: "",
+  line: "",
+  freedraw: "",
+  text: "",
+  image: "",
+  group: "",
+  frame: "",
+  magicframe: "",
+  embeddable: "",
+  selection: "",
+  iframe: ""
+};
+var headings = {
+  canvasActions: "",
+  selectedShapeActions: "",
+  shapes: ""
+};
+var hints = {
+  dismissSearch: "",
+  canvasPanning: "",
+  linearElement: "",
+  arrowTool: "",
+  arrowBindModifiers: "",
+  freeDraw: "",
+  text: "",
+  embeddable: "",
+  text_selected: "",
+  text_editing: "",
+  linearElementMulti: "",
+  lockAngle: "",
+  resize: "",
+  resizeImage: "",
+  rotate: "",
+  lineEditor_info: "",
+  lineEditor_line_info: "",
+  lineEditor_pointSelected: "",
+  lineEditor_nothingSelected: "",
+  publishLibrary: "",
+  bindTextToElement: "",
+  createFlowchart: "",
+  deepBoxSelect: "",
+  eraserRevert: "",
+  firefox_clipboard_write: "",
+  disableSnapping: "",
+  enterCropEditor: "",
+  leaveCropEditor: ""
+};
+var canvasError = {
+  cannotShowPreview: "",
+  canvasTooBig: "",
+  canvasTooBigTip: ""
+};
+var errorSplash = {
+  headingMain: "",
+  clearCanvasMessage: "",
+  clearCanvasCaveat: "",
+  trackedToSentry: "",
+  openIssueMessage: "",
+  sceneContent: ""
+};
+var shareDialog = {
+  or: ""
+};
+var roomDialog = {
+  desc_intro: "",
+  desc_privacy: "",
+  button_startSession: "",
+  button_stopSession: "",
+  desc_inProgressIntro: "",
+  desc_shareLink: "",
+  desc_exitSession: "",
+  shareTitle: ""
+};
+var errorDialog = {
+  title: ""
+};
+var exportDialog = {
+  disk_title: "",
+  disk_details: "",
+  disk_button: "",
+  link_title: "",
+  link_details: "",
+  link_button: "",
+  excalidrawplus_description: "",
+  excalidrawplus_button: "",
+  excalidrawplus_exportError: ""
+};
+var helpDialog = {
+  blog: "",
+  click: "",
+  deepSelect: "",
+  deepBoxSelect: "",
+  createFlowchart: "",
+  navigateFlowchart: "",
+  curvedArrow: "",
+  curvedLine: "",
+  documentation: "",
+  doubleClick: "",
+  drag: "",
+  editor: "",
+  editLineArrowPoints: "",
+  editText: "",
+  github: "",
+  howto: "",
+  or: "",
+  preventBinding: "",
+  tools: "",
+  shortcuts: "",
+  textFinish: "",
+  textNewLine: "",
+  title: "",
+  view: "",
+  zoomToFit: "",
+  zoomToSelection: "",
+  toggleElementLock: "",
+  movePageUpDown: "",
+  movePageLeftRight: "",
+  cropStart: "",
+  cropFinish: ""
+};
+var clearCanvasDialog = {
+  title: ""
+};
+var publishDialog = {
+  title: "",
+  itemName: "",
+  authorName: "",
+  githubUsername: "",
+  twitterUsername: "",
+  libraryName: "",
+  libraryDesc: "",
+  website: "",
+  placeholder: {
+    authorName: "",
+    libraryName: "",
+    libraryDesc: "",
+    githubHandle: "",
+    twitterHandle: "",
+    website: ""
+  },
+  errors: {
+    required: "",
+    website: ""
+  },
+  noteDescription: "",
+  noteGuidelines: "",
+  noteLicense: "",
+  noteItems: "",
+  atleastOneLibItem: "",
+  republishWarning: ""
+};
+var publishSuccessDialog = {
+  title: "",
+  content: ""
+};
+var confirmDialog = {
+  resetLibrary: "",
+  removeItemsFromLib: ""
+};
+var imageExportDialog = {
+  header: "",
+  label: {
+    withBackground: "",
+    onlySelected: "",
+    darkMode: "",
+    embedScene: "",
+    scale: "",
+    padding: ""
+  },
+  tooltip: {
+    embedScene: ""
+  },
+  title: {
+    exportToPng: "",
+    exportToSvg: "",
+    copyPngToClipboard: ""
+  },
+  button: {
+    exportToPng: "",
+    exportToSvg: "",
+    copyPngToClipboard: ""
+  }
+};
+var encrypted = {
+  tooltip: "",
+  link: ""
+};
+var stats = {
+  angle: "",
+  shapes: "",
+  height: "",
+  scene: "",
+  selected: "",
+  storage: "",
+  fullTitle: "",
+  title: "",
+  generalStats: "",
+  elementProperties: "",
+  total: "",
+  version: "",
+  versionCopy: "",
+  versionNotAvailable: "",
+  width: ""
+};
+var toast = {
+  addedToLibrary: "",
+  copyStyles: "",
+  copyToClipboard: "",
+  copyToClipboardAsPng: "",
+  copyToClipboardAsSvg: "",
+  fileSaved: "",
+  fileSavedToFilename: "",
+  canvas: "",
+  selection: "",
+  pasteAsSingleElement: "",
+  unableToEmbed: "",
+  unrecognizedLinkFormat: "",
+  elementLinkCopied: ""
+};
+var colors = {
+  transparent: "",
+  black: "",
+  white: "",
+  red: "",
+  pink: "",
+  grape: "",
+  violet: "",
+  gray: "",
+  blue: "",
+  cyan: "",
+  teal: "",
+  green: "",
+  yellow: "",
+  orange: "",
+  bronze: ""
+};
+var welcomeScreen = {
+  app: {
+    center_heading: "",
+    center_heading_plus: "",
+    menuHint: ""
+  },
+  defaults: {
+    menuHint: "",
+    center_heading: "",
+    toolbarHint: "",
+    helpHint: ""
+  }
+};
+var colorPicker = {
+  color: "",
+  mostUsedCustomColors: "",
+  colors: "",
+  shades: "",
+  hexCode: "",
+  noShades: ""
+};
+var overwriteConfirm = {
+  action: {
+    exportToImage: {
+      title: "",
+      button: "",
+      description: ""
+    },
+    saveToDisk: {
+      title: "",
+      button: "",
+      description: ""
+    },
+    excalidrawPlus: {
+      title: "",
+      button: "",
+      description: ""
+    }
+  },
+  modal: {
+    loadFromFile: {
+      title: "",
+      button: "",
+      description: ""
+    },
+    shareableLink: {
+      title: "",
+      button: "",
+      description: ""
+    }
+  }
+};
+var mermaid = {
+  title: "",
+  button: "",
+  description: "",
+  syntax: "",
+  preview: ""
+};
+var quickSearch = {
+  placeholder: ""
+};
+var fontList = {
+  badge: {
+    old: ""
+  },
+  sceneFonts: "",
+  availableFonts: "",
+  empty: ""
+};
+var userList = {
+  empty: "",
+  hint: {
+    text: "",
+    followStatus: "",
+    inCall: "",
+    micMuted: "",
+    isSpeaking: ""
+  }
+};
+var commandPalette = {
+  title: "",
+  shortcuts: {
+    select: "",
+    confirm: "",
+    close: ""
+  },
+  recents: "",
+  search: {
+    placeholder: "",
+    noMatch: ""
+  },
+  itemNotAvailable: "",
+  shortcutHint: ""
+};
+var keys = {
+  ctrl: "",
+  option: "",
+  cmd: "",
+  alt: "",
+  escape: "",
+  enter: "",
+  shift: "",
+  spacebar: "",
+  delete: "",
+  mmb: ""
+};
+var az_AZ_default = {
+  labels,
+  elementLink,
+  library,
+  search,
+  buttons,
+  alerts,
+  errors,
+  toolBar,
+  element,
+  headings,
+  hints,
+  canvasError,
+  errorSplash,
+  shareDialog,
+  roomDialog,
+  errorDialog,
+  exportDialog,
+  helpDialog,
+  clearCanvasDialog,
+  publishDialog,
+  publishSuccessDialog,
+  confirmDialog,
+  imageExportDialog,
+  encrypted,
+  stats,
+  toast,
+  colors,
+  welcomeScreen,
+  colorPicker,
+  overwriteConfirm,
+  mermaid,
+  quickSearch,
+  fontList,
+  userList,
+  commandPalette,
+  keys
+};
+export {
+  alerts,
+  buttons,
+  canvasError,
+  clearCanvasDialog,
+  colorPicker,
+  colors,
+  commandPalette,
+  confirmDialog,
+  az_AZ_default as default,
+  element,
+  elementLink,
+  encrypted,
+  errorDialog,
+  errorSplash,
+  errors,
+  exportDialog,
+  fontList,
+  headings,
+  helpDialog,
+  hints,
+  imageExportDialog,
+  keys,
+  labels,
+  library,
+  mermaid,
+  overwriteConfirm,
+  publishDialog,
+  publishSuccessDialog,
+  quickSearch,
+  roomDialog,
+  search,
+  shareDialog,
+  stats,
+  toast,
+  toolBar,
+  userList,
+  welcomeScreen
+};
+//# sourceMappingURL=az-AZ-2PAD62G4.js.map

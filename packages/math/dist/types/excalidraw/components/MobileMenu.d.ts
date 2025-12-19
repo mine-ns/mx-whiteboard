@@ -1,0 +1,23 @@
+import React from "react";
+import type { NonDeletedExcalidrawElement } from "@excalidraw/element/types";
+import type { ActionManager } from "../actions/manager";
+import type { AppClassProperties, AppProps, AppState, UIAppState } from "../types";
+import type { JSX } from "react";
+type MobileMenuProps = {
+    appState: UIAppState;
+    actionManager: ActionManager;
+    renderJSONExportDialog: () => React.ReactNode;
+    renderImageExportDialog: () => React.ReactNode;
+    setAppState: React.Component<any, AppState>["setState"];
+    elements: readonly NonDeletedExcalidrawElement[];
+    onHandToolToggle: () => void;
+    onPenModeToggle: AppClassProperties["togglePenMode"];
+    renderTopRightUI?: (isMobile: boolean, appState: UIAppState) => JSX.Element | null;
+    renderTopLeftUI?: (isMobile: boolean, appState: UIAppState) => JSX.Element | null;
+    renderSidebars: () => JSX.Element | null;
+    renderWelcomeScreen: boolean;
+    UIOptions: AppProps["UIOptions"];
+    app: AppClassProperties;
+};
+export declare const MobileMenu: ({ appState, elements, actionManager, setAppState, onHandToolToggle, renderTopLeftUI, renderTopRightUI, renderSidebars, renderWelcomeScreen, UIOptions, app, onPenModeToggle, }: MobileMenuProps) => import("react/jsx-runtime").JSX.Element;
+export {};
