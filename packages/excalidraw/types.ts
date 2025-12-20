@@ -27,6 +27,7 @@ import type {
   Theme,
   StrokeRoundness,
   ExcalidrawEmbeddableElement,
+  ExcalidrawCustomContentElement,
   ExcalidrawMagicFrameElement,
   ExcalidrawFrameLikeElement,
   ExcalidrawElementType,
@@ -637,6 +638,15 @@ export interface ExcalidrawProps {
     | ((link: string) => boolean | undefined);
   renderEmbeddable?: (
     element: NonDeleted<ExcalidrawEmbeddableElement>,
+    appState: AppState,
+  ) => JSX.Element | null;
+  /**
+   * Custom content renderer - allows rendering custom React components on the canvas.
+   * Similar to tldraw's HTMLContainer functionality.
+   * Return a React element to render, or null to show a placeholder.
+   */
+  renderCustomContent?: (
+    element: NonDeleted<ExcalidrawCustomContentElement>,
     appState: AppState,
   ) => JSX.Element | null;
   aiEnabled?: boolean;

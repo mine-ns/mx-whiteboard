@@ -30,6 +30,7 @@ import type {
   ExcalidrawLineElement,
   ExcalidrawFlowchartNodeElement,
   ExcalidrawLinearElementSubType,
+  ExcalidrawCustomContentElement,
   FileId,
 } from "./types";
 
@@ -66,6 +67,12 @@ export const isIframeElement = (
   element: ExcalidrawElement | null,
 ): element is ExcalidrawIframeElement => {
   return !!element && element.type === "iframe";
+};
+
+export const isCustomContentElement = (
+  element: ExcalidrawElement | null | undefined,
+): element is ExcalidrawCustomContentElement => {
+  return !!element && element.type === "customContent";
 };
 
 export const isIframeLikeElement = (
@@ -274,7 +281,8 @@ export const isExcalidrawElement = (
     case "frame":
     case "magicframe":
     case "image":
-    case "selection": {
+    case "selection":
+    case "customContent": {
       return true;
     }
     default: {

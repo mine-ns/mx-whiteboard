@@ -53,6 +53,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
     children,
     validateEmbeddable,
     renderEmbeddable,
+    renderCustomContent,
     aiEnabled,
     showDeprecatedFonts,
     renderScrollbars,
@@ -146,6 +147,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
           onDuplicate={onDuplicate}
           validateEmbeddable={validateEmbeddable}
           renderEmbeddable={renderEmbeddable}
+          renderCustomContent={renderCustomContent}
           aiEnabled={aiEnabled !== false}
           showDeprecatedFonts={showDeprecatedFonts}
           renderScrollbars={renderScrollbars}

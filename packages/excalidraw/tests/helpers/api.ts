@@ -17,6 +17,7 @@ import {
   newLinearElement,
   newMagicFrameElement,
   newTextElement,
+  newCustomContentElement,
 } from "@excalidraw/element";
 
 import { isLinearElementType } from "@excalidraw/element";
@@ -217,6 +218,7 @@ export class API {
       : never;
     elbowed?: boolean;
     fixedSegments?: FixedSegment[] | null;
+    contentType?: T extends "customContent" ? string : never;
   }): T extends "arrow" | "line"
     ? ExcalidrawLinearElement
     : T extends "freedraw"
@@ -360,6 +362,13 @@ export class API {
         break;
       case "magicframe":
         element = newMagicFrameElement({ ...base, width, height });
+        break;
+      case "customContent":
+        element = newCustomContentElement({
+          ...base,
+          type: "customContent",
+          contentType: rest.contentType || "default",
+        });
         break;
       default:
         assertNever(

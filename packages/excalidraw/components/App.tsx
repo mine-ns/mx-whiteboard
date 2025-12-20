@@ -144,6 +144,7 @@ import {
   isFrameLikeElement,
   isImageElement,
   isEmbeddableElement,
+  isCustomContentElement,
   isLocalVideoEmbeddable,
   isInitializedImageElement,
   isLinearElement,
@@ -273,6 +274,7 @@ import type {
   IframeData,
   ExcalidrawIframeElement,
   ExcalidrawEmbeddableElement,
+  ExcalidrawCustomContentElement,
   Ordered,
   MagicGenerationData,
   ExcalidrawArrowElement,
@@ -1667,6 +1669,117 @@ class App extends React.Component<AppProps, AppState> {
     );
   }
 
+  /**
+   * Renders custom content elements - allows rendering custom React components on canvas.
+   * Similar to tldraw's HTMLContainer functionality.
+   */
+  private renderCustomContents() {
+    const scale = this.state.zoom.value;
+    const normalizedWidth = this.state.width;
+    const normalizedHeight = this.state.height;
+
+    const customContentElements = this.scene
+      .getNonDeletedElements()
+      .filter(
+        (el): el is Ordered<NonDeleted<ExcalidrawCustomContentElement>> =>
+          isCustomContentElement(el),
+      );
+
+    if (customContentElements.length === 0) {
+      return null;
+    }
+
+    return (
+      <>
+        {customContentElements.map((el) => {
+          const { x, y } = sceneCoordsToViewportCoords(
+            { sceneX: el.x, sceneY: el.y },
+            this.state,
+          );
+
+          const isVisible = isElementInViewport(
+            el,
+            normalizedWidth,
+            normalizedHeight,
+            this.state,
+            this.scene.getNonDeletedElementsMap(),
+          );
+
+          if (!isVisible) {
+            return null;
+          }
+
+          const customContent = this.props.renderCustomContent?.(
+            el,
+            this.state,
+          );
+
+          return (
+            <div
+              key={el.id}
+              className="excalidraw__customcontent-container"
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                transform: `translate(${x - this.state.offsetLeft}px, ${
+                  y - this.state.offsetTop
+                }px) scale(${scale})`,
+                transformOrigin: "top left",
+                opacity: getRenderOpacity(
+                  el,
+                  getContainingFrame(el, this.scene.getNonDeletedElementsMap()),
+                  this.elementsPendingErasure,
+                  null,
+                  this.state.openDialog?.name === "elementLinkSelector"
+                    ? DEFAULT_REDUCED_GLOBAL_ALPHA
+                    : 1,
+                ),
+                pointerEvents: POINTER_EVENTS.disabled,
+              }}
+            >
+              <div
+                className="excalidraw__customcontent-container__inner"
+                style={{
+                  width: `${el.width}px`,
+                  height: `${el.height}px`,
+                  transform: `rotate(${el.angle}rad)`,
+                  overflow: "hidden",
+                }}
+              >
+                {customContent ?? (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor:
+                        this.state.theme === THEME.DARK
+                          ? "rgba(30, 30, 30, 0.9)"
+                          : "rgba(240, 240, 240, 0.9)",
+                      borderRadius: "8px",
+                      border: `2px dashed ${
+                        this.state.theme === THEME.DARK ? "#555" : "#ccc"
+                      }`,
+                      color: this.state.theme === THEME.DARK ? "#888" : "#666",
+                      fontSize: "14px",
+                      padding: "16px",
+                      textAlign: "center",
+                    }}
+                  >
+                    Custom content: {el.contentType || "unknown"}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </>
+    );
+  }
+
   private getFrameNameDOMId = (frameElement: ExcalidrawElement) => {
     return `${this.id}-frame-name-${frameElement.id}`;
   };
@@ -2224,6 +2337,7 @@ class App extends React.Component<AppProps, AppState> {
                         )}
                       </ExcalidrawActionManagerContext.Provider>
                       {this.renderEmbeddables()}
+                      {this.renderCustomContents()}
                     </ExcalidrawElementsContext.Provider>
                   </ExcalidrawAppStateContext.Provider>
                 </ExcalidrawSetAppStateContext.Provider>

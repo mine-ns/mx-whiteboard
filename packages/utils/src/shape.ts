@@ -39,6 +39,7 @@ import { getElementAbsoluteCoords } from "@excalidraw/element";
 import type {
   ElementsMap,
   ExcalidrawBindableElement,
+  ExcalidrawCustomContentElement,
   ExcalidrawDiamondElement,
   ExcalidrawElement,
   ExcalidrawEllipseElement,
@@ -110,7 +111,8 @@ type RectangularElement =
   | ExcalidrawImageElement
   | ExcalidrawIframeElement
   | ExcalidrawTextElement
-  | ExcalidrawSelectionElement;
+  | ExcalidrawSelectionElement
+  | ExcalidrawCustomContentElement;
 
 // polygon
 export const getPolygonShape = <Point extends GlobalPoint | LocalPoint>(

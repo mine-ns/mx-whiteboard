@@ -48,6 +48,7 @@ import type {
   ExcalidrawArrowElement,
   ExcalidrawElbowArrowElement,
   ExcalidrawLineElement,
+  ExcalidrawCustomContentElement,
   FileId,
 } from "./types";
 
@@ -184,6 +185,18 @@ export const newIframeElement = (
 ): NonDeleted<ExcalidrawIframeElement> => {
   return {
     ..._newElementBase<ExcalidrawIframeElement>("iframe", opts),
+  };
+};
+
+export const newCustomContentElement = (
+  opts: {
+    type: "customContent";
+    contentType: string;
+  } & ElementConstructorOpts,
+): NonDeleted<ExcalidrawCustomContentElement> => {
+  return {
+    ..._newElementBase<ExcalidrawCustomContentElement>("customContent", opts),
+    contentType: opts.contentType,
   };
 };
 

@@ -130,6 +130,18 @@ export type ExcalidrawIframeLikeElement =
   | ExcalidrawIframeElement
   | ExcalidrawEmbeddableElement;
 
+/**
+ * Custom content element - allows rendering custom React components on the canvas.
+ * Similar to tldraw's HTMLContainer functionality.
+ * The actual rendering is handled by the `renderCustomContent` prop on Excalidraw.
+ */
+export type ExcalidrawCustomContentElement = _ExcalidrawElementBase &
+  Readonly<{
+    type: "customContent";
+    /** Identifier for the type of content to render (e.g., "issueChanges", "summaryFeedback") */
+    contentType: string;
+  }>;
+
 export type IframeData =
   | {
       intrinsicSize: { w: number; h: number };
@@ -203,6 +215,7 @@ export type ExcalidrawRectanguloidElement =
   | ExcalidrawIframeLikeElement
   | ExcalidrawFrameLikeElement
   | ExcalidrawEmbeddableElement
+  | ExcalidrawCustomContentElement
   | ExcalidrawSelectionElement;
 
 /**
@@ -220,7 +233,8 @@ export type ExcalidrawElement =
   | ExcalidrawFrameElement
   | ExcalidrawMagicFrameElement
   | ExcalidrawIframeElement
-  | ExcalidrawEmbeddableElement;
+  | ExcalidrawEmbeddableElement
+  | ExcalidrawCustomContentElement;
 
 export type ExcalidrawNonSelectionElement = Exclude<
   ExcalidrawElement,
