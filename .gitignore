@@ -22,6 +22,7 @@ package-lock.json
 yarn-debug.log*
 yarn-error.log*
 packages/excalidraw/types
+packages/*/dist/types
 coverage
 dev-dist
 html

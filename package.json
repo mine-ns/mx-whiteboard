@@ -67,7 +67,7 @@
     "test:app": "vitest",
     "test:code": "eslint --max-warnings=0 --ext .js,.ts,.tsx .",
     "test:other": "yarn prettier --list-different",
-    "test:typecheck": "tsc",
+    "test:typecheck": "rimraf packages/common/dist/types packages/element/dist/types packages/excalidraw/dist/types packages/math/dist/types && tsc",
     "test:update": "yarn test:app --update --watch=false",
     "test": "yarn test:app",
     "test:coverage": "vitest --coverage",
