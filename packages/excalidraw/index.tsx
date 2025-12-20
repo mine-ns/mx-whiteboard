@@ -286,6 +286,7 @@ export { Ellipsify } from "./components/Ellipsify";
 export { useEditorInterface, useStylesPanelMode } from "./components/App";
 export { WelcomeScreen };
 export { LiveCollaborationTrigger };
+export { UnsavedIndicator } from "./components/UnsavedIndicator";
 export { Stats } from "./components/Stats";
 
 export { DefaultSidebar } from "./components/DefaultSidebar";

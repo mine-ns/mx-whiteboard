@@ -12,6 +12,7 @@ type Props = {
   onChange: (value: string) => void;
   label: string;
   ignoreFocus?: boolean;
+  isModified?: boolean;
 };
 
 export const ProjectName = (props: Props) => {
@@ -52,6 +53,11 @@ export const ProjectName = (props: Props) => {
         value={fileName}
         onChange={(event) => setFileName(event.target.value)}
       />
+      {props.isModified && (
+        <span className="ProjectName-modified" title="Unsaved changes">
+          *
+        </span>
+      )}
     </div>
   );
 };

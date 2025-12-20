@@ -1,0 +1,25 @@
+.excalidraw {
+  .unsaved-button {
+    --button-bg: var(--color-warning-lighter);
+    --button-color: var(--color-warning-darkest);
+    --button-border: var(--color-warning-light);
+
+    --button-width: auto;
+    --button-height: var(--lg-button-size);
+
+    --button-hover-bg: var(--color-warning-light);
+    --button-hover-border: var(--color-warning);
+
+    --button-active-bg: var(--color-warning-light);
+
+    flex-shrink: 0;
+    gap: 6px;
+
+    &__dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-warning-dark);
+      border-radius: 50%;
+    }
+  }
+}

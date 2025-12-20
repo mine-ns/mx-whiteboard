@@ -417,6 +417,8 @@ export interface AppState {
   offsetLeft: number;
 
   fileHandle: FileSystemHandle | null;
+  /** Tracks if the scene has been modified since the last save */
+  isModifiedSinceLastSave: boolean;
   collaborators: Map<SocketId, Collaborator>;
   stats: {
     open: boolean;

@@ -2622,6 +2622,13 @@ class App extends React.Component<AppProps, AppState> {
       this.setState((prevAppState) => {
         const actionAppState = actionResult.appState || {};
 
+        // Only allow explicit isModifiedSinceLastSave changes (e.g., save actions resetting to false)
+        // The emitter handles setting it to true when undo stack changes
+        const isModifiedSinceLastSave: boolean =
+          "isModifiedSinceLastSave" in (actionResult.appState || {})
+            ? (actionAppState.isModifiedSinceLastSave ?? prevAppState.isModifiedSinceLastSave)
+            : prevAppState.isModifiedSinceLastSave;
+
         return {
           ...prevAppState,
           ...actionAppState,
@@ -2635,6 +2642,7 @@ class App extends React.Component<AppProps, AppState> {
           theme,
           name,
           errorMessage,
+          isModifiedSinceLastSave,
         };
       });
 
@@ -2924,6 +2932,10 @@ class App extends React.Component<AppProps, AppState> {
 
     this.store.onDurableIncrementEmitter.on((increment) => {
       this.history.record(increment.delta);
+      // Mark as modified whenever something is added to undo stack
+      if (!this.state.isModifiedSinceLastSave) {
+        this.setState({ isModifiedSinceLastSave: true });
+      }
     });
 
     const { onIncrement } = this.props;

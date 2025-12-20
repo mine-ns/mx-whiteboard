@@ -49,6 +49,7 @@ export const actionChangeProjectName = register<AppState["name"]>({
       value={app.getName()}
       onChange={(name: string) => updateData(name)}
       ignoreFocus={data?.ignoreFocus ?? false}
+      isModified={appState.isModifiedSinceLastSave}
     />
   ),
 });
@@ -186,6 +187,7 @@ export const actionSaveToActiveFile = register({
         appState: {
           ...appState,
           fileHandle,
+          isModifiedSinceLastSave: false,
           toast: fileHandleExists
             ? {
                 message: fileHandle?.name
@@ -232,6 +234,7 @@ export const actionSaveFileToDisk = register({
           ...appState,
           openDialog: null,
           fileHandle,
+          isModifiedSinceLastSave: false,
           toast: { message: t("toast.fileSaved") },
         },
       };
@@ -279,7 +282,7 @@ export const actionLoadScene = register({
       } = await openMxFile(appState, elements);
       return {
         elements: loadedElements,
-        appState: { ...loadedAppState, fileHandle },
+        appState: { ...loadedAppState, fileHandle, isModifiedSinceLastSave: false },
         files,
         captureUpdate: CaptureUpdateAction.IMMEDIATELY,
       };
