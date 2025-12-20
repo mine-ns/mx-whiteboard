@@ -1,6 +1,6 @@
 import type { VERSIONS } from "@excalidraw/common";
 
-import type { ExcalidrawElement } from "@excalidraw/element/types";
+import type { ExcalidrawElement, FileId } from "@excalidraw/element/types";
 
 import type { cleanAppStateForExport } from "../appState";
 import type {
@@ -64,3 +64,45 @@ export interface ImportedLibraryData extends Partial<ExportedLibraryData> {
 export type ExcalidrawLibraryIds = {
   itemIds: LibraryItem["id"][];
 };
+
+// ============================================================================
+// MX Whiteboard Export/Import Types
+// ============================================================================
+
+/** Asset reference (replaces embedded dataURL in exported files) */
+export interface AssetReference {
+  id: FileId;
+  hash: string; // SHA-256 content hash
+  mimeType: string;
+  size: number; // bytes
+  filename: string; // hash + extension, e.g., "a1b2c3.png"
+}
+
+/** Exported scene with external asset references (.mxwj format) */
+export interface ExportedSceneWithAssets {
+  type: "excalidraw";
+  version: number;
+  source: string;
+  elements: readonly ExcalidrawElement[];
+  appState: ReturnType<typeof cleanAppStateForExport>;
+  assetReferences: AssetReference[];
+}
+
+/** Individual asset for upload/save */
+export interface ExportedAsset {
+  reference: AssetReference;
+  blob: Blob;
+}
+
+/** Complete export result from exportSceneWithAssets */
+export interface SceneExportResult {
+  scene: ExportedSceneWithAssets;
+  assets: ExportedAsset[];
+}
+
+/** Import result for loadFromMxFile and importSceneWithAssets */
+export interface MxImportResult {
+  elements: ExcalidrawElement[];
+  appState: Partial<AppState>;
+  files: BinaryFiles;
+}

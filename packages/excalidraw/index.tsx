@@ -307,3 +307,31 @@ export { getDataURL } from "./data/blob";
 export { isElementLink } from "@excalidraw/element";
 
 export { setCustomTextMetricsProvider } from "@excalidraw/element";
+
+// MX Whiteboard Export/Import API
+export {
+  exportSceneWithAssets,
+  exportToZip,
+  importFromZip,
+  importFromMxJson,
+  importSceneWithAssets,
+} from "./data/exportAssets";
+
+export {
+  saveToMxFile,
+  loadFromMxFile,
+  openMxFile,
+  MX_FILE_EXTENSIONS,
+  SUPPORTED_IMPORT_EXTENSIONS,
+} from "./data/mxFormat";
+
+export type {
+  AssetReference,
+  ExportedSceneWithAssets,
+  ExportedAsset,
+  SceneExportResult,
+  MxImportResult,
+} from "./data/types";
+
+// Blob utilities (also from @excalidraw/common)
+export { dataURLToBlob, blobToDataURL } from "@excalidraw/common";

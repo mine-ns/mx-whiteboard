@@ -1311,3 +1311,40 @@ export const setFeatureFlag = <F extends keyof FEATURE_FLAGS>(
     console.error("unable to set feature flag", e);
   }
 };
+
+// ============================================================================
+// Blob conversion utilities for MX Whiteboard export/import
+// ============================================================================
+
+/**
+ * Convert a data URL to a Blob
+ * @param dataURL - Base64 data URL (e.g., "data:image/png;base64,...")
+ * @returns Blob object
+ */
+export const dataURLToBlob = (dataURL: string): Blob => {
+  const [header, base64Data] = dataURL.split(",");
+  const mimeMatch = header.match(/data:([^;]+)/);
+  const mimeType = mimeMatch?.[1] || "application/octet-stream";
+
+  const binaryString = atob(base64Data);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  return new Blob([bytes], { type: mimeType });
+};
+
+/**
+ * Convert a Blob to a data URL
+ * @param blob - Blob object
+ * @returns Promise resolving to base64 data URL
+ */
+export const blobToDataURL = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};

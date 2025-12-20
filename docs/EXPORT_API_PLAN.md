@@ -1,6 +1,6 @@
 # MX Whiteboard Export/Import System
 
-> **Status:** Planned (not yet implemented)
+> **Status:** In Progress (Phase 1-4 complete, integration pending)
 
 ## Overview
 
@@ -444,14 +444,14 @@ export type {
 ## Implementation Checklist
 
 ### Phase 1: Core API
-- [ ] Create `packages/excalidraw/data/hash.ts` - SHA-256 utility
-- [ ] Create `packages/excalidraw/data/exportAssets.ts` - Core export/import
-- [ ] Add jszip dependency
-- [ ] Add types to `packages/excalidraw/data/types.ts`
-- [ ] Add blob utilities to `packages/common/src/utils.ts`
+- [x] Create `packages/excalidraw/data/hash.ts` - SHA-256 utility
+- [x] Create `packages/excalidraw/data/exportAssets.ts` - Core export/import
+- [x] Add jszip dependency
+- [x] Add types to `packages/excalidraw/data/types.ts`
+- [x] Add blob utilities to `packages/common/src/utils.ts`
 
 ### Phase 2: MX File Format
-- [ ] Create `packages/excalidraw/data/mxFormat.ts` - Save/load functions
+- [x] Create `packages/excalidraw/data/mxFormat.ts` - Save/load functions
 - [ ] Update `actionSaveFileToDisk` to use `saveToMxFile`
 - [ ] Update `actionLoadScene` to use `loadFromMxFile`
 - [ ] Update file input `accept` attributes to `.mxwj,.mxwz,.excalidraw,.json`
@@ -462,7 +462,7 @@ export type {
 - [ ] Update export dialog descriptions
 
 ### Phase 4: Public API
-- [ ] Export all new APIs from `packages/excalidraw/index.tsx`
+- [x] Export all new APIs from `packages/excalidraw/index.tsx`
 
 ### Phase 5: Testing
 - [ ] Test: Save scene without media → `.mxwj`
