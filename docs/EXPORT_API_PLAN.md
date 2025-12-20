@@ -1,6 +1,6 @@
 # MX Whiteboard Export/Import System
 
-> **Status:** In Progress (Phase 1-4 complete, integration pending)
+> **Status:** In Progress (Phases 1-4 complete, ready for testing)
 
 ## Overview
 
@@ -452,14 +452,14 @@ export type {
 
 ### Phase 2: MX File Format
 - [x] Create `packages/excalidraw/data/mxFormat.ts` - Save/load functions
-- [ ] Update `actionSaveFileToDisk` to use `saveToMxFile`
-- [ ] Update `actionLoadScene` to use `loadFromMxFile`
-- [ ] Update file input `accept` attributes to `.mxwj,.mxwz,.excalidraw,.json`
-- [ ] Update Ctrl+S keyboard shortcut handler
+- [x] Update `actionSaveFileToDisk` to use `saveToMxFile`
+- [x] Update `actionLoadScene` to use `loadFromMxFile`/`openMxFile`
+- [x] Update file input handling (shows all files, filters by extension after selection)
+- [x] Ctrl+S keyboard shortcut now uses MX format
 
 ### Phase 3: UI Updates
-- [ ] Update `packages/excalidraw/locales/en.json` dialog labels
-- [ ] Update export dialog descriptions
+- [x] File descriptions set in `mxFormat.ts` ("MX Whiteboard file", "MX Whiteboard file (with media)")
+- [x] Generic locale labels work with new format (no changes needed)
 
 ### Phase 4: Public API
 - [x] Export all new APIs from `packages/excalidraw/index.tsx`
