@@ -1,6 +1,6 @@
 # MX Whiteboard Export/Import System
 
-> **Status:** In Progress (Phases 1-4 complete, ready for testing)
+> **Status:** Complete (All phases done, tested and working)
 
 ## Overview
 
@@ -30,12 +30,14 @@ Always used for local file saves. Contains scene JSON + assets.
 
 ```
 whiteboard.mxwz
-├── scene.mxwj          # ExportedSceneWithAssets JSON
+├── scene_a1b2c3d4.mxwj  # ExportedSceneWithAssets JSON (content-hashed filename)
 └── assets/
-    ├── a1b2c3def.png   # SHA-256 hash as filename
+    ├── a1b2c3def.png    # SHA-256 hash as filename
     ├── xyz789ghi.mp4
     └── ...
 ```
+
+**Note:** Scene filename uses content hash (`scene_{hash}.mxwj`) to ensure unique filenames across different whiteboards.
 
 ### `.mxwj` - JSON Only (Inside ZIP or Cloud)
 
@@ -60,14 +62,16 @@ Same structure as ZIP contents, uploaded as separate files:
 
 ```
 whiteboards/{id}/
-├── scene.mxwj
+├── scene_a1b2c3d4.mxwj  # Content-hashed filename
 └── assets/
     ├── a1b2c3def.png
     ├── xyz789ghi.mp4
     └── ...
 ```
 
-Convex stores just the folder URL: `https://r2.../whiteboards/{id}/`
+Convex stores the folder URL AND scene filename:
+- `folderUrl`: `https://r2.../whiteboards/{id}/`
+- `sceneFilename`: `scene_a1b2c3d4.mxwj`
 
 ---
 
@@ -127,6 +131,8 @@ export interface ExportedAsset {
 export interface SceneExportResult {
   scene: ExportedSceneWithAssets;
   assets: ExportedAsset[];
+  /** Scene filename with content hash, e.g., "scene_a1b2c3d4.mxwj" */
+  sceneFilename: string;
 }
 
 /** Import result */
@@ -330,23 +336,23 @@ blobToDataURL(blob) → Promise<string>
 
 ```typescript
 // EXPORT: Save to R2
-const { scene, assets } = await exportSceneWithAssets(elements, appState, files);
+const { scene, assets, sceneFilename } = await exportSceneWithAssets(elements, appState, files);
 
-// Upload scene.mxwj
-await uploadToR2(`whiteboards/${id}/scene.mxwj`, new Blob([JSON.stringify(scene)]));
+// Upload scene with unique filename
+await uploadToR2(`whiteboards/${id}/${sceneFilename}`, new Blob([JSON.stringify(scene)]));
 
 // Upload each asset
 for (const asset of assets) {
   await uploadToR2(`whiteboards/${id}/assets/${asset.reference.filename}`, asset.blob);
 }
 
-// Store folder URL in Convex
-await saveToConvex({ id, url: `https://r2.../whiteboards/${id}/` });
+// Store folder URL AND scene filename in Convex
+await saveToConvex({ id, url: `https://r2.../whiteboards/${id}/`, sceneFilename });
 
 
 // IMPORT: Load from R2
-const folderUrl = await getFromConvex(id);
-const sceneJson = await fetch(`${folderUrl}/scene.mxwj`).then(r => r.json());
+const { folderUrl, sceneFilename } = await getFromConvex(id);
+const sceneJson = await fetch(`${folderUrl}/${sceneFilename}`).then(r => r.json());
 
 const { elements, appState, files } = await importSceneWithAssets(
   sceneJson,
@@ -427,12 +433,33 @@ export type {
 ## Key Design Decisions
 
 1. **SHA-256 content hash filenames** - Deduplicates + prevents collisions
-2. **Separate scene.mxwj** - No embedded base64, smaller and git-friendly
+2. **Unique scene filenames** - `scene_{hash}.mxwj` ensures no collision across whiteboards
 3. **Simple asset fetcher** - Just pass a function `(filename) => Blob`
 4. **Auto-format detection** - Saves as `.mxwj` or `.mxwz` based on media presence
 5. **Videos included** - Works with local video feature
 6. **Legacy import support** - Can import old `.excalidraw` files
 7. **Excalidraw runtime unchanged** - Always uses base64 internally
+
+---
+
+## Implementation Notes
+
+### JSZip MIME Type Fix
+
+When importing from ZIP, JSZip returns blobs without the correct MIME type. The import function must recreate blobs with the correct type from `assetReference.mimeType`:
+
+```typescript
+const rawBlob = await assetFetcher(ref.filename);
+// JSZip returns blobs without correct MIME type, so we need to set it
+const blob = new Blob([rawBlob], { type: ref.mimeType });
+```
+
+### VideoPlayer Component
+
+The VideoPlayer component includes:
+- **Loading spinner** - Shows while video is loading
+- **Error states** - Displays error message if video fails to load
+- **Valid source check** - Shows "Video not found" if dataURL is empty
 
 ---
 
@@ -460,10 +487,16 @@ export type {
 - [x] Export all new APIs from `packages/excalidraw/index.tsx`
 
 ### Phase 5: Testing
-- [ ] Test: Save scene without media → `.mxwj`
-- [ ] Test: Save scene with image → `.mxwz`
-- [ ] Test: Save scene with video → `.mxwz`
-- [ ] Test: Import `.mxwj` file
-- [ ] Test: Import `.mxwz` file
-- [ ] Test: Import legacy `.excalidraw` file
-- [ ] Test: Import legacy `.json` file
+- [x] Test: Save scene without media → `.mxwj`
+- [x] Test: Save scene with image → `.mxwz`
+- [x] Test: Save scene with video → `.mxwz`
+- [x] Test: Import `.mxwj` file
+- [x] Test: Import `.mxwz` file (with video MIME type fix)
+- [x] Test: Import legacy `.excalidraw` file
+- [x] Test: Import legacy `.json` file
+
+### Additional Fixes (During Testing)
+- [x] Fix: Video flashing "empty web embed" when switching tabs
+- [x] Fix: Unique scene filenames (`scene_{hash}.mxwj`) for cloud storage
+- [x] Fix: JSZip MIME type for video import
+- [x] Add: VideoPlayer loading spinner and error states
