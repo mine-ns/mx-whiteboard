@@ -11740,7 +11740,7 @@ function getSvgPathFromStroke(points) {
 // src/comparisons.ts
 init_define_import_meta_env();
 var hasBackground = (type) => type === "rectangle" || type === "iframe" || type === "embeddable" || type === "ellipse" || type === "diamond" || type === "line" || type === "freedraw";
-var hasStrokeColor = (type) => type === "rectangle" || type === "ellipse" || type === "diamond" || type === "freedraw" || type === "arrow" || type === "line" || type === "text";
+var hasStrokeColor = (type) => type === "rectangle" || type === "ellipse" || type === "diamond" || type === "freedraw" || type === "arrow" || type === "line" || type === "text" || type === "embeddable";
 var hasStrokeWidth = (type) => type === "rectangle" || type === "iframe" || type === "embeddable" || type === "ellipse" || type === "diamond" || type === "freedraw" || type === "arrow" || type === "line";
 var hasStrokeStyle = (type) => type === "rectangle" || type === "iframe" || type === "embeddable" || type === "ellipse" || type === "diamond" || type === "arrow" || type === "line";
 var canChangeRoundness = (type) => type === "rectangle" || type === "iframe" || type === "embeddable" || type === "line" || type === "diamond" || type === "image";
