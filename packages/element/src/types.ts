@@ -104,6 +104,8 @@ export type ExcalidrawEmbeddableElement = _ExcalidrawElementBase &
     fileId?: FileId | null;
     /** Status of file persistence for local videos */
     status?: "pending" | "saved" | "error";
+    /** Alt text / description for local videos */
+    description?: string;
   }>;
 
 export type MagicGenerationData =

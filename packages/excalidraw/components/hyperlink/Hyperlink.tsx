@@ -26,9 +26,11 @@ import {
   normalizeLink,
 } from "@excalidraw/common";
 
-import { isEmbeddableElement } from "@excalidraw/element";
+import { isEmbeddableElement, isLocalVideoEmbeddable } from "@excalidraw/element";
 
 import type { Scene } from "@excalidraw/element";
+
+import type { BinaryFiles } from "../../types";
 
 import type {
   ElementsMap,
@@ -43,7 +45,7 @@ import { t } from "../../i18n";
 
 import { useAppProps, useEditorInterface, useExcalidrawAppState } from "../App";
 import { ToolButton } from "../ToolButton";
-import { FreedrawIcon, TrashIcon, elementLinkIcon } from "../icons";
+import { FreedrawIcon, TrashIcon, elementLinkIcon, downloadIcon } from "../icons";
 import { getSelectedElements } from "../../scene";
 
 import { getLinkHandleFromCoords } from "./helpers";
@@ -65,6 +67,102 @@ const embeddableLinkCache = new Map<
   string
 >();
 
+// LocalVideoPopup component for local video embeddables
+const LocalVideoPopup = ({
+  element,
+  files,
+  scene,
+  isEditing,
+  setAppState,
+}: {
+  element: ExcalidrawEmbeddableElement & { fileId: string };
+  files: BinaryFiles;
+  scene: Scene;
+  isEditing: boolean;
+  setAppState: React.Component<any, AppState>["setState"];
+}) => {
+  const fileData = files[element.fileId];
+  const [descValue, setDescValue] = useState(element.description || "");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  const handleDownload = () => {
+    if (!fileData) {
+      return;
+    }
+
+    // Convert dataURL to Blob and download
+    const [header, base64] = fileData.dataURL.split(",");
+    const mimeType = header.match(/:(.*?);/)?.[1] || "video/mp4";
+    const binary = atob(base64);
+    const array = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      array[i] = binary.charCodeAt(i);
+    }
+    const blob = new Blob([array], { type: mimeType });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `video.${mimeType.split("/")[1] || "mp4"}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDescriptionSubmit = () => {
+    scene.mutateElement(element, { description: descValue });
+    setAppState({ showHyperlinkPopup: "info" });
+  };
+
+  return (
+    <>
+      {isEditing ? (
+        <input
+          ref={inputRef}
+          className="excalidraw-hyperlinkContainer-input"
+          placeholder={t("labels.video.descriptionPlaceholder")}
+          value={descValue}
+          onChange={(e) => setDescValue(e.target.value)}
+          autoFocus
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            if (e.key === KEYS.ENTER || e.key === KEYS.ESCAPE) {
+              handleDescriptionSubmit();
+            }
+          }}
+        />
+      ) : (
+        <div className="excalidraw-hyperlinkContainer-link">
+          {element.description || t("labels.video.noDescription")}
+        </div>
+      )}
+      <div className="excalidraw-hyperlinkContainer__buttons">
+        {!isEditing && (
+          <ToolButton
+            type="button"
+            title={t("buttons.editDescription")}
+            aria-label={t("buttons.editDescription")}
+            onClick={() => setAppState({ showHyperlinkPopup: "editor" })}
+            icon={FreedrawIcon}
+          />
+        )}
+        <ToolButton
+          type="button"
+          title={t("buttons.download")}
+          aria-label={t("buttons.download")}
+          onClick={handleDownload}
+          icon={downloadIcon}
+        />
+      </div>
+    </>
+  );
+};
+
 export const Hyperlink = ({
   element,
   scene,
@@ -72,6 +170,7 @@ export const Hyperlink = ({
   onLinkOpen,
   setToast,
   updateEmbedValidationStatus,
+  files,
 }: {
   element: NonDeletedExcalidrawElement;
   scene: Scene;
@@ -84,6 +183,7 @@ export const Hyperlink = ({
     element: ExcalidrawEmbeddableElement,
     status: boolean,
   ) => void;
+  files: BinaryFiles;
 }) => {
   const elementsMap = scene.getNonDeletedElementsMap();
   const appState = useExcalidrawAppState();
@@ -258,97 +358,109 @@ export const Hyperlink = ({
         padding: POPUP_PADDING,
       }}
     >
-      {isEditing ? (
-        <input
-          className={clsx("excalidraw-hyperlinkContainer-input")}
-          placeholder={t("labels.link.hint")}
-          ref={inputRef}
-          value={inputVal}
-          onChange={(event) => setInputVal(event.target.value)}
-          autoFocus
-          onKeyDown={(event) => {
-            event.stopPropagation();
-            // prevent cmd/ctrl+k shortcut when editing link
-            if (event[KEYS.CTRL_OR_CMD] && event.key === KEYS.K) {
-              event.preventDefault();
-            }
-            if (event.key === KEYS.ENTER || event.key === KEYS.ESCAPE) {
-              handleSubmit();
-              setAppState({ showHyperlinkPopup: "info" });
-            }
-          }}
+      {isLocalVideoEmbeddable(element) ? (
+        <LocalVideoPopup
+          element={element}
+          files={files}
+          scene={scene}
+          isEditing={isEditing}
+          setAppState={setAppState}
         />
-      ) : element.link ? (
-        <a
-          href={normalizeLink(element.link || "")}
-          className="excalidraw-hyperlinkContainer-link"
-          target={isLocalLink(element.link) ? "_self" : "_blank"}
-          onClick={(event) => {
-            if (element.link && onLinkOpen) {
-              const customEvent = wrapEvent(
-                EVENT.EXCALIDRAW_LINK,
-                event.nativeEvent,
-              );
-              onLinkOpen(
-                {
-                  ...element,
-                  link: normalizeLink(element.link),
-                },
-                customEvent,
-              );
-              if (customEvent.defaultPrevented) {
-                event.preventDefault();
-              }
-            }
-          }}
-          rel="noopener noreferrer"
-        >
-          {element.link}
-        </a>
       ) : (
-        <div className="excalidraw-hyperlinkContainer-link">
-          {t("labels.link.empty")}
-        </div>
+        <>
+          {isEditing ? (
+            <input
+              className={clsx("excalidraw-hyperlinkContainer-input")}
+              placeholder={t("labels.link.hint")}
+              ref={inputRef}
+              value={inputVal}
+              onChange={(event) => setInputVal(event.target.value)}
+              autoFocus
+              onKeyDown={(event) => {
+                event.stopPropagation();
+                // prevent cmd/ctrl+k shortcut when editing link
+                if (event[KEYS.CTRL_OR_CMD] && event.key === KEYS.K) {
+                  event.preventDefault();
+                }
+                if (event.key === KEYS.ENTER || event.key === KEYS.ESCAPE) {
+                  handleSubmit();
+                  setAppState({ showHyperlinkPopup: "info" });
+                }
+              }}
+            />
+          ) : element.link ? (
+            <a
+              href={normalizeLink(element.link || "")}
+              className="excalidraw-hyperlinkContainer-link"
+              target={isLocalLink(element.link) ? "_self" : "_blank"}
+              onClick={(event) => {
+                if (element.link && onLinkOpen) {
+                  const customEvent = wrapEvent(
+                    EVENT.EXCALIDRAW_LINK,
+                    event.nativeEvent,
+                  );
+                  onLinkOpen(
+                    {
+                      ...element,
+                      link: normalizeLink(element.link),
+                    },
+                    customEvent,
+                  );
+                  if (customEvent.defaultPrevented) {
+                    event.preventDefault();
+                  }
+                }
+              }}
+              rel="noopener noreferrer"
+            >
+              {element.link}
+            </a>
+          ) : (
+            <div className="excalidraw-hyperlinkContainer-link">
+              {t("labels.link.empty")}
+            </div>
+          )}
+          <div className="excalidraw-hyperlinkContainer__buttons">
+            {!isEditing && (
+              <ToolButton
+                type="button"
+                title={t("buttons.edit")}
+                aria-label={t("buttons.edit")}
+                label={t("buttons.edit")}
+                onClick={onEdit}
+                className="excalidraw-hyperlinkContainer--edit"
+                icon={FreedrawIcon}
+              />
+            )}
+            <ToolButton
+              type="button"
+              title={t("labels.linkToElement")}
+              aria-label={t("labels.linkToElement")}
+              label={t("labels.linkToElement")}
+              onClick={() => {
+                setAppState({
+                  openDialog: {
+                    name: "elementLinkSelector",
+                    sourceElementId: element.id,
+                  },
+                });
+              }}
+              icon={elementLinkIcon}
+            />
+            {linkVal && !isEmbeddableElement(element) && (
+              <ToolButton
+                type="button"
+                title={t("buttons.remove")}
+                aria-label={t("buttons.remove")}
+                label={t("buttons.remove")}
+                onClick={handleRemove}
+                className="excalidraw-hyperlinkContainer--remove"
+                icon={TrashIcon}
+              />
+            )}
+          </div>
+        </>
       )}
-      <div className="excalidraw-hyperlinkContainer__buttons">
-        {!isEditing && (
-          <ToolButton
-            type="button"
-            title={t("buttons.edit")}
-            aria-label={t("buttons.edit")}
-            label={t("buttons.edit")}
-            onClick={onEdit}
-            className="excalidraw-hyperlinkContainer--edit"
-            icon={FreedrawIcon}
-          />
-        )}
-        <ToolButton
-          type="button"
-          title={t("labels.linkToElement")}
-          aria-label={t("labels.linkToElement")}
-          label={t("labels.linkToElement")}
-          onClick={() => {
-            setAppState({
-              openDialog: {
-                name: "elementLinkSelector",
-                sourceElementId: element.id,
-              },
-            });
-          }}
-          icon={elementLinkIcon}
-        />
-        {linkVal && !isEmbeddableElement(element) && (
-          <ToolButton
-            type="button"
-            title={t("buttons.remove")}
-            aria-label={t("buttons.remove")}
-            label={t("buttons.remove")}
-            onClick={handleRemove}
-            className="excalidraw-hyperlinkContainer--remove"
-            icon={TrashIcon}
-          />
-        )}
-      </div>
     </div>
   );
 };

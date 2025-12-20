@@ -137,6 +137,10 @@
       "hint": "Type or paste your link here",
       "goToElement": "Go to target element"
     },
+    "video": {
+      "noDescription": "No description",
+      "descriptionPlaceholder": "Enter video description..."
+    },
     "lineEditor": {
       "edit": "Edit line",
       "editArrow": "Edit arrow"
@@ -218,6 +222,8 @@
     "menu": "Menu",
     "done": "Done",
     "edit": "Edit",
+    "editDescription": "Edit description",
+    "download": "Download",
     "undo": "Undo",
     "redo": "Redo",
     "resetLibrary": "Reset library",

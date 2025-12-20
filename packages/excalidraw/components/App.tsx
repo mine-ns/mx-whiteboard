@@ -2026,6 +2026,7 @@ class App extends React.Component<AppProps, AppState> {
                               updateEmbedValidationStatus={
                                 this.updateEmbedValidationStatus
                               }
+                              files={this.files}
                             />
                           )}
                         {this.props.aiEnabled !== false &&
