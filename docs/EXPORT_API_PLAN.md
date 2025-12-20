@@ -58,21 +58,22 @@ The scene JSON format used inside `.mxwz` and for cloud storage.
 
 ### Cloud Storage Structure (R2)
 
-Same structure as ZIP contents, uploaded as separate files:
+Each whiteboard has its own folder with a fixed `scene.mxwj` filename:
 
 ```
 whiteboards/{id}/
-├── scene_a1b2c3d4.mxwj  # Content-hashed filename
+├── scene.mxwj           # Fixed filename (enables overwrite)
 └── assets/
-    ├── a1b2c3def.png
+    ├── a1b2c3def.png    # SHA-256 hash as filename
     ├── xyz789ghi.mp4
     └── ...
 ```
 
-Convex stores the folder URL AND scene filename:
+Convex stores the folder URL:
 
 - `folderUrl`: `https://r2.../whiteboards/{id}/`
-- `sceneFilename`: `scene_a1b2c3d4.mxwj`
+
+**Note:** Cloud storage uses fixed `scene.mxwj` (not content-hashed) since each whiteboard has its own folder. This allows overwriting without creating duplicate files.
 
 ---
 
@@ -338,19 +339,19 @@ blobToDataURL(blob) → Promise<string>
 
 ```typescript
 // EXPORT: Save to R2
-const { scene, assets, sceneFilename } = await exportSceneWithAssets(
+const { scene, assets } = await exportSceneWithAssets(
   elements,
   appState,
   files,
 );
 
-// Upload scene with unique filename
+// Upload scene with fixed filename (enables overwrite)
 await uploadToR2(
-  `whiteboards/${id}/${sceneFilename}`,
+  `whiteboards/${id}/scene.mxwj`,
   new Blob([JSON.stringify(scene)]),
 );
 
-// Upload each asset
+// Upload each asset (content-hashed filenames for deduplication)
 for (const asset of assets) {
   await uploadToR2(
     `whiteboards/${id}/assets/${asset.reference.filename}`,
@@ -358,16 +359,15 @@ for (const asset of assets) {
   );
 }
 
-// Store folder URL AND scene filename in Convex
+// Store folder URL in Convex
 await saveToConvex({
   id,
   url: `https://r2.../whiteboards/${id}/`,
-  sceneFilename,
 });
 
 // IMPORT: Load from R2
-const { folderUrl, sceneFilename } = await getFromConvex(id);
-const sceneJson = await fetch(`${folderUrl}/${sceneFilename}`).then((r) =>
+const { folderUrl } = await getFromConvex(id);
+const sceneJson = await fetch(`${folderUrl}/scene.mxwj`).then((r) =>
   r.json(),
 );
 
@@ -449,13 +449,14 @@ export type {
 
 ## Key Design Decisions
 
-1. **SHA-256 content hash filenames** - Deduplicates + prevents collisions
-2. **Unique scene filenames** - `scene_{hash}.mxwj` ensures no collision across whiteboards
-3. **Simple asset fetcher** - Just pass a function `(filename) => Blob`
-4. **Auto-format detection** - Saves as `.mxwj` or `.mxwz` based on media presence
-5. **Videos included** - Works with local video feature
-6. **Legacy import support** - Can import old `.excalidraw` files
-7. **Excalidraw runtime unchanged** - Always uses base64 internally
+1. **SHA-256 content hash filenames** - Deduplicates assets + prevents collisions
+2. **Fixed scene filename for cloud** - `scene.mxwj` enables overwrite (each whiteboard has own folder)
+3. **Content-hashed scene for local** - `scene_{hash}.mxwj` in ZIP avoids collision when saving multiple files
+4. **Simple asset fetcher** - Just pass a function `(filename) => Blob`
+5. **Auto-format detection** - Saves as `.mxwj` or `.mxwz` based on media presence
+6. **Videos included** - Works with local video feature
+7. **Legacy import support** - Can import old `.excalidraw` files
+8. **Excalidraw runtime unchanged** - Always uses base64 internally
 
 ---
 
