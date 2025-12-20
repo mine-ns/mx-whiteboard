@@ -39,9 +39,7 @@ const isFileReferenced = (
 ): boolean => {
   return elements.some(
     (element) =>
-      !element.isDeleted &&
-      "fileId" in element &&
-      element.fileId === fileId,
+      !element.isDeleted && "fileId" in element && element.fileId === fileId,
   );
 };
 

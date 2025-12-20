@@ -26,7 +26,10 @@ import {
   normalizeLink,
 } from "@excalidraw/common";
 
-import { isEmbeddableElement, isLocalVideoEmbeddable } from "@excalidraw/element";
+import {
+  isEmbeddableElement,
+  isLocalVideoEmbeddable,
+} from "@excalidraw/element";
 
 import type { Scene } from "@excalidraw/element";
 
@@ -45,7 +48,12 @@ import { t } from "../../i18n";
 
 import { useAppProps, useEditorInterface, useExcalidrawAppState } from "../App";
 import { ToolButton } from "../ToolButton";
-import { FreedrawIcon, TrashIcon, elementLinkIcon, downloadIcon } from "../icons";
+import {
+  FreedrawIcon,
+  TrashIcon,
+  elementLinkIcon,
+  downloadIcon,
+} from "../icons";
 import { getSelectedElements } from "../../scene";
 
 import { getLinkHandleFromCoords } from "./helpers";

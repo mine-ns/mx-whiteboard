@@ -75,7 +75,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         className="excalidraw__embeddable__video"
         onLoadedData={() => setIsLoading(false)}
         onError={(e) => {
-          console.error("VideoPlayer: Failed to load video", e.currentTarget.error);
+          console.error(
+            "VideoPlayer: Failed to load video",
+            e.currentTarget.error,
+          );
           setIsLoading(false);
           setHasError(true);
         }}

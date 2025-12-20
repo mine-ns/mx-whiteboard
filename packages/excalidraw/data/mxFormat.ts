@@ -101,9 +101,8 @@ export const loadFromMxFile = async (
       appState: result.appState,
       files: result.files || {},
     };
-  } else {
-    throw new Error(`Unsupported file type: .${ext}`);
   }
+  throw new Error(`Unsupported file type: .${ext}`);
 };
 
 /**
@@ -123,11 +122,7 @@ export const openMxFile = async (
     // The file picker will show all files, and we filter by extension after selection
   });
 
-  const result = await loadFromMxFile(
-    file,
-    localAppState,
-    localElements,
-  );
+  const result = await loadFromMxFile(file, localAppState, localElements);
 
   return {
     ...result,
