@@ -81,6 +81,7 @@ var getDefaultAppState = () => {
     exportEmbedScene: false,
     exportWithDarkMode: false,
     fileHandle: null,
+    isModifiedSinceLastSave: false,
     gridSize: DEFAULT_GRID_SIZE,
     gridStep: DEFAULT_GRID_STEP,
     gridModeEnabled: false,
@@ -187,6 +188,7 @@ var APP_STATE_STORAGE_CONF = /* @__PURE__ */ ((config) => config)({
   exportScale: { browser: true, export: false, server: false },
   exportWithDarkMode: { browser: true, export: false, server: false },
   fileHandle: { browser: false, export: false, server: false },
+  isModifiedSinceLastSave: { browser: false, export: false, server: false },
   gridSize: { browser: true, export: true, server: true },
   gridStep: { browser: true, export: true, server: true },
   gridModeEnabled: { browser: true, export: true, server: true },
@@ -5008,7 +5010,7 @@ var parseFileContents = async (blob) => {
   let contents;
   if (blob.type === MIME_TYPES6.png) {
     try {
-      return await (await import("./data/image-RYJ7L54A.js")).decodePngMetadata(blob);
+      return await (await import("./data/image-NJAOSDKH.js")).decodePngMetadata(blob);
     } catch (error) {
       if (error.message === "INVALID") {
         throw new ImageSceneDataError(
@@ -5449,4 +5451,4 @@ export {
   createFile,
   normalizeFile
 };
-//# sourceMappingURL=chunk-TADE2NW4.js.map
+//# sourceMappingURL=chunk-IZAJC5O7.js.map

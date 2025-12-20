@@ -66,7 +66,7 @@ import {
   serializeAsJSON,
   serializeLibraryAsJSON,
   strokeRectWithRotation_simple
-} from "./chunk-TADE2NW4.js";
+} from "./chunk-IZAJC5O7.js";
 import {
   define_import_meta_env_default
 } from "./chunk-CP5DND7P.js";
@@ -8696,11 +8696,13 @@ var ProjectName = (props) => {
         value: fileName,
         onChange: (event) => setFileName(event.target.value)
       }
-    )
+    ),
+    props.isModified && /* @__PURE__ */ jsx40("span", { className: "ProjectName-modified", title: "Unsaved changes", children: "*" })
   ] });
 };
 
 // data/mxFormat.ts
+import JSZip2 from "jszip";
 import { DEFAULT_FILENAME } from "@excalidraw/common";
 
 // data/exportAssets.ts
@@ -8754,7 +8756,7 @@ var generateSceneHash = async (scene) => {
   const fullHash = await sha256(blob);
   return fullHash.slice(0, 8);
 };
-var exportSceneWithAssets = async (elements, appState, files) => {
+var exportSceneWithAssets = async (elements, appState, files, options) => {
   const assets = [];
   const assetReferences = [];
   for (const [fileId, fileData] of Object.entries(files)) {
@@ -8772,7 +8774,9 @@ var exportSceneWithAssets = async (elements, appState, files) => {
       filename: `${hash}.${ext}`
     };
     assetReferences.push(reference);
-    assets.push({ reference, blob });
+    if (!options?.existingAssetHashes?.has(hash)) {
+      assets.push({ reference, blob });
+    }
   }
   const scene = {
     type: EXPORT_DATA_TYPES.excalidraw,
@@ -8786,11 +8790,12 @@ var exportSceneWithAssets = async (elements, appState, files) => {
   const sceneFilename = `scene_${sceneHash}.mxwj`;
   return { scene, assets, sceneFilename };
 };
-var exportToZip = async (elements, appState, files) => {
+var exportToZip = async (elements, appState, files, options) => {
   const { scene, assets, sceneFilename } = await exportSceneWithAssets(
     elements,
     appState,
-    files
+    files,
+    options
   );
   const zip = new JSZip();
   zip.file(sceneFilename, JSON.stringify(scene, null, 2));
@@ -8868,8 +8873,33 @@ var SUPPORTED_IMPORT_EXTENSIONS = [
   "json"
   // Legacy support
 ];
+var getExistingAssetHashes = async (fileHandle) => {
+  try {
+    const file2 = await fileHandle.getFile();
+    const zip = await JSZip2.loadAsync(file2);
+    const hashes = /* @__PURE__ */ new Set();
+    const assetsFolder = zip.folder("assets");
+    if (assetsFolder) {
+      assetsFolder.forEach((relativePath) => {
+        const hash = relativePath.split(".")[0];
+        if (hash) {
+          hashes.add(hash);
+        }
+      });
+    }
+    return hashes;
+  } catch {
+    return /* @__PURE__ */ new Set();
+  }
+};
 var saveToMxFile = async (elements, appState, files, name = DEFAULT_FILENAME, fileHandle) => {
-  const zipBlob = await exportToZip(elements, appState, files);
+  let existingAssetHashes;
+  if (fileHandle) {
+    existingAssetHashes = await getExistingAssetHashes(fileHandle);
+  }
+  const zipBlob = await exportToZip(elements, appState, files, {
+    existingAssetHashes
+  });
   const handle = await fileSave(zipBlob, {
     name,
     extension: "mxwz",
@@ -9775,7 +9805,7 @@ var exportCanvas = async (type, elements, appState, files, {
     let blob = canvasToBlob(tempCanvas);
     if (appState.exportEmbedScene) {
       blob = blob.then(
-        (blob2) => import("./data/image-RYJ7L54A.js").then(
+        (blob2) => import("./data/image-NJAOSDKH.js").then(
           ({ encodePngMetadata: encodePngMetadata2 }) => encodePngMetadata2({
             blob: blob2,
             metadata: serializeAsJSON(elements, appState, files, "local")
@@ -9862,7 +9892,8 @@ var actionChangeProjectName = register({
       label: t("labels.fileTitle"),
       value: app.getName(),
       onChange: (name) => updateData(name),
-      ignoreFocus: data?.ignoreFocus ?? false
+      ignoreFocus: data?.ignoreFocus ?? false,
+      isModified: appState.isModifiedSinceLastSave
     }
   )
 });
@@ -9976,6 +10007,7 @@ var actionSaveToActiveFile = register({
         appState: {
           ...appState,
           fileHandle,
+          isModifiedSinceLastSave: false,
           toast: fileHandleExists ? {
             message: fileHandle?.name ? t("toast.fileSavedToFilename").replace(
               "{filename}",
@@ -10017,6 +10049,7 @@ var actionSaveFileToDisk = register({
           ...appState,
           openDialog: null,
           fileHandle,
+          isModifiedSinceLastSave: false,
           toast: { message: t("toast.fileSaved") }
         }
       };
@@ -10061,7 +10094,7 @@ var actionLoadScene = register({
       } = await openMxFile(appState, elements);
       return {
         elements: loadedElements,
-        appState: { ...loadedAppState, fileHandle },
+        appState: { ...loadedAppState, fileHandle, isModifiedSinceLastSave: false },
         files,
         captureUpdate: CaptureUpdateAction9.IMMEDIATELY
       };
@@ -34594,6 +34627,7 @@ var App = class _App extends React46.Component {
         }
         this.setState((prevAppState) => {
           const actionAppState = actionResult.appState || {};
+          const isModifiedSinceLastSave = "isModifiedSinceLastSave" in (actionResult.appState || {}) ? actionAppState.isModifiedSinceLastSave ?? prevAppState.isModifiedSinceLastSave : prevAppState.isModifiedSinceLastSave;
           return {
             ...prevAppState,
             ...actionAppState,
@@ -34606,7 +34640,8 @@ var App = class _App extends React46.Component {
             zenModeEnabled,
             theme,
             name,
-            errorMessage
+            errorMessage,
+            isModifiedSinceLastSave
           };
         });
         didUpdate = true;
@@ -40307,6 +40342,9 @@ var App = class _App extends React46.Component {
     }
     this.store.onDurableIncrementEmitter.on((increment) => {
       this.history.record(increment.delta);
+      if (!this.state.isModifiedSinceLastSave) {
+        this.setState({ isModifiedSinceLastSave: true });
+      }
     });
     const { onIncrement } = this.props;
     if (onIncrement) {
@@ -43132,8 +43170,31 @@ import {
 } from "@excalidraw/element";
 import { CaptureUpdateAction as CaptureUpdateAction38 } from "@excalidraw/element";
 
-// components/TTDDialog/TTDDialogTrigger.tsx
+// components/UnsavedIndicator.tsx
 import { jsx as jsx160, jsxs as jsxs88 } from "react/jsx-runtime";
+var UnsavedIndicator = ({
+  isModified,
+  onSelect
+}) => {
+  if (!isModified) {
+    return null;
+  }
+  return /* @__PURE__ */ jsxs88(
+    Button,
+    {
+      className: "unsaved-button",
+      onSelect,
+      title: "You have unsaved changes. Click to save (Ctrl+S)",
+      children: [
+        /* @__PURE__ */ jsx160("span", { className: "unsaved-button__dot" }),
+        "Unsaved"
+      ]
+    }
+  );
+};
+
+// components/TTDDialog/TTDDialogTrigger.tsx
+import { jsx as jsx161, jsxs as jsxs89 } from "react/jsx-runtime";
 var TTDDialogTrigger = ({
   children,
   icon
@@ -43141,7 +43202,7 @@ var TTDDialogTrigger = ({
   const { t: t2 } = useI18n();
   const { TTDDialogTriggerTunnel } = useTunnels();
   const setAppState = useExcalidrawSetAppState();
-  return /* @__PURE__ */ jsx160(TTDDialogTriggerTunnel.In, { children: /* @__PURE__ */ jsxs88(
+  return /* @__PURE__ */ jsx161(TTDDialogTriggerTunnel.In, { children: /* @__PURE__ */ jsxs89(
     DropdownMenu_default.Item,
     {
       onSelect: () => {
@@ -43151,7 +43212,7 @@ var TTDDialogTrigger = ({
       icon: icon ?? brainIcon,
       children: [
         children ?? t2("labels.textToDiagram"),
-        /* @__PURE__ */ jsx160(DropdownMenu_default.Item.Badge, { children: "AI" })
+        /* @__PURE__ */ jsx161(DropdownMenu_default.Item.Badge, { children: "AI" })
       ]
     }
   ) });
@@ -43177,7 +43238,7 @@ var DiagramToCodePlugin = (props) => {
 import { isElementLink as isElementLink3 } from "@excalidraw/element";
 import { setCustomTextMetricsProvider } from "@excalidraw/element";
 import { dataURLToBlob as dataURLToBlob2, blobToDataURL as blobToDataURL2 } from "@excalidraw/common";
-import { jsx as jsx161 } from "react/jsx-runtime";
+import { jsx as jsx162 } from "react/jsx-runtime";
 polyfill_default();
 var ExcalidrawBase = (props) => {
   const {
@@ -43250,7 +43311,7 @@ var ExcalidrawBase = (props) => {
       document.removeEventListener("touchmove", handleTouchMove);
     };
   }, []);
-  return /* @__PURE__ */ jsx161(EditorJotaiProvider, { store: editorJotaiStore, children: /* @__PURE__ */ jsx161(InitializeApp, { langCode, theme, children: /* @__PURE__ */ jsx161(
+  return /* @__PURE__ */ jsx162(EditorJotaiProvider, { store: editorJotaiStore, children: /* @__PURE__ */ jsx162(InitializeApp, { langCode, theme, children: /* @__PURE__ */ jsx162(
     App_default,
     {
       onChange,
@@ -43349,6 +43410,7 @@ export {
   THEME16 as THEME,
   TTDDialog,
   TTDDialogTrigger,
+  UnsavedIndicator,
   UserIdleState2 as UserIdleState,
   WelcomeScreen_default as WelcomeScreen,
   blobToDataURL2 as blobToDataURL,

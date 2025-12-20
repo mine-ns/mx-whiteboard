@@ -1407,6 +1407,13 @@
 .ProjectName .TextInput--readonly:hover {
   background: none;
 }
+.ProjectName-modified {
+  margin-left: 4px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-warning-darkest);
+  cursor: default;
+}
 
 /* components/Avatar.scss */
 .excalidraw .Avatar {
@@ -7135,5 +7142,25 @@ body.excalidraw-cursor-resize * {
   font-weight: 700;
   style: normal;
   display: swap;
+}
+
+/* components/UnsavedIndicator.scss */
+.excalidraw .unsaved-button {
+  --button-bg: var(--color-warning-lighter);
+  --button-color: var(--color-warning-darkest);
+  --button-border: var(--color-warning-light);
+  --button-width: auto;
+  --button-height: var(--lg-button-size);
+  --button-hover-bg: var(--color-warning-light);
+  --button-hover-border: var(--color-warning);
+  --button-active-bg: var(--color-warning-light);
+  flex-shrink: 0;
+  gap: 6px;
+}
+.excalidraw .unsaved-button__dot {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-warning-dark);
+  border-radius: 50%;
 }
 /*# sourceMappingURL=index.css.map */
