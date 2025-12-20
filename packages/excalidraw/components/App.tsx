@@ -6392,6 +6392,10 @@ class App extends React.Component<AppProps, AppState> {
         ? getNormalizedZoom(initialScale * scaleFactor)
         : this.state.zoom.value;
 
+      // Side effects from translateCanvas - must be outside setState updater
+      this.cancelInProgressAnimation?.();
+      this.maybeUnfollowRemoteUser();
+
       this.setState((state) => {
         const zoomState = getStateForZoom(
           {
@@ -6402,7 +6406,9 @@ class App extends React.Component<AppProps, AppState> {
           state,
         );
 
-        this.translateCanvas({
+        // Return state directly instead of calling translateCanvas to avoid
+        // setState inside setState (React anti-pattern)
+        return {
           zoom: zoomState.zoom,
           // 2x multiplier is just a magic number that makes this work correctly
           // on touchscreen devices (note: if we get report that panning is slower/faster
@@ -6410,9 +6416,7 @@ class App extends React.Component<AppProps, AppState> {
           scrollX: zoomState.scrollX + 2 * (deltaX / nextZoom),
           scrollY: zoomState.scrollY + 2 * (deltaY / nextZoom),
           shouldCacheIgnoreZoom: true,
-        });
-
-        return null;
+        };
       });
       this.resetShouldCacheIgnoreZoomDebounced();
     } else {
