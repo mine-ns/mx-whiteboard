@@ -17,6 +17,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
+  // Check if dataURL is valid
+  const hasValidSrc = dataURL && dataURL.length > 0;
+
   return (
     <div
       style={{
@@ -29,7 +32,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         backgroundColor: "var(--default-bg-color)",
       }}
     >
-      {isLoading && !hasError && (
+      {isLoading && !hasError && hasValidSrc && (
         <div
           style={{
             position: "absolute",
@@ -46,7 +49,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </span>
         </div>
       )}
-      {hasError && (
+      {(hasError || !hasValidSrc) && (
         <div
           style={{
             position: "absolute",
@@ -58,7 +61,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           }}
         >
           <span style={{ fontSize: "1.5em" }}>!</span>
-          <span style={{ fontSize: "0.875em" }}>Failed to load video</span>
+          <span style={{ fontSize: "0.875em" }}>
+            {!hasValidSrc ? "Video not found" : "Failed to load video"}
+          </span>
         </div>
       )}
       <video
@@ -69,7 +74,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         title={title}
         className="excalidraw__embeddable__video"
         onLoadedData={() => setIsLoading(false)}
-        onError={() => {
+        onError={(e) => {
+          console.error("VideoPlayer: Failed to load video", e.currentTarget.error);
           setIsLoading(false);
           setHasError(true);
         }}

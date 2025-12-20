@@ -98,6 +98,8 @@ export interface ExportedAsset {
 export interface SceneExportResult {
   scene: ExportedSceneWithAssets;
   assets: ExportedAsset[];
+  /** Scene filename with content hash, e.g., "scene_a1b2c3d4.mxwj" */
+  sceneFilename: string;
 }
 
 /** Import result for loadFromMxFile and importSceneWithAssets */

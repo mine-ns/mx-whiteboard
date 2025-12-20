@@ -46,13 +46,25 @@ const isFileReferenced = (
 };
 
 /**
+ * Generate a short hash (8 chars) from scene content for filename uniqueness
+ */
+const generateSceneHash = async (
+  scene: ExportedSceneWithAssets,
+): Promise<string> => {
+  const content = JSON.stringify(scene);
+  const blob = new Blob([content], { type: "application/json" });
+  const fullHash = await sha256(blob);
+  return fullHash.slice(0, 8);
+};
+
+/**
  * Core export - separates scene from assets
  * Used by both local file save and cloud upload
  *
  * @param elements - Scene elements
  * @param appState - Application state
  * @param files - Binary files (images/videos) with base64 dataURLs
- * @returns Scene JSON and asset blobs ready for storage
+ * @returns Scene JSON, asset blobs, and scene filename ready for storage
  */
 export const exportSceneWithAssets = async (
   elements: readonly ExcalidrawElement[],
@@ -92,14 +104,18 @@ export const exportSceneWithAssets = async (
     assetReferences,
   };
 
-  return { scene, assets };
+  // Generate content-based hash for unique filename
+  const sceneHash = await generateSceneHash(scene);
+  const sceneFilename = `scene_${sceneHash}.mxwj`;
+
+  return { scene, assets, sceneFilename };
 };
 
 /**
  * Export as ZIP archive (.mxwz)
  *
  * Creates a ZIP containing:
- * - scene.mxwj (scene JSON with asset references)
+ * - scene_{hash}.mxwj (scene JSON with asset references)
  * - assets/{hash}.{ext} (binary asset files)
  *
  * @param elements - Scene elements
@@ -112,7 +128,7 @@ export const exportToZip = async (
   appState: Partial<AppState>,
   files: BinaryFiles,
 ): Promise<Blob> => {
-  const { scene, assets } = await exportSceneWithAssets(
+  const { scene, assets, sceneFilename } = await exportSceneWithAssets(
     elements,
     appState,
     files,
@@ -120,8 +136,8 @@ export const exportToZip = async (
 
   const zip = new JSZip();
 
-  // Add scene JSON
-  zip.file("scene.mxwj", JSON.stringify(scene, null, 2));
+  // Add scene JSON with unique filename
+  zip.file(sceneFilename, JSON.stringify(scene, null, 2));
 
   // Add assets
   const assetsFolder = zip.folder("assets");
@@ -143,13 +159,21 @@ export const exportToZip = async (
 export const importFromZip = async (zipBlob: Blob): Promise<MxImportResult> => {
   const zip = await JSZip.loadAsync(zipBlob);
 
-  // Read scene JSON
-  const sceneFile = zip.file("scene.mxwj");
+  // Find scene file by pattern (scene_*.mxwj) or legacy name (scene.mxwj)
+  const sceneFileRegex = /^scene(_[a-f0-9]+)?\.mxwj$/;
+  let sceneFile: JSZip.JSZipObject | null = null;
+
+  zip.forEach((relativePath, file) => {
+    if (sceneFileRegex.test(relativePath)) {
+      sceneFile = file;
+    }
+  });
+
   if (!sceneFile) {
-    throw new Error("Invalid .mxwz file: missing scene.mxwj");
+    throw new Error("Invalid .mxwz file: missing scene*.mxwj");
   }
 
-  const sceneJson = await sceneFile.async("string");
+  const sceneJson = await (sceneFile as JSZip.JSZipObject).async("string");
   const scene: ExportedSceneWithAssets = JSON.parse(sceneJson);
 
   // Create asset fetcher for ZIP contents
@@ -193,8 +217,9 @@ export const importFromMxJson = async (file: File): Promise<MxImportResult> => {
  * @example
  * ```typescript
  * // Load from R2 cloud storage
- * const folderUrl = await getFromConvex(id);
- * const sceneJson = await fetch(`${folderUrl}/scene.mxwj`).then(r => r.json());
+ * // sceneFilename is stored in Convex, e.g., "scene_a1b2c3d4.mxwj"
+ * const { folderUrl, sceneFilename } = await getFromConvex(id);
+ * const sceneJson = await fetch(`${folderUrl}/${sceneFilename}`).then(r => r.json());
  *
  * const result = await importSceneWithAssets(
  *   sceneJson,
@@ -213,7 +238,11 @@ export const importSceneWithAssets = async (
 
   // Fetch all assets and convert to dataURLs
   for (const ref of scene.assetReferences || []) {
-    const blob = await assetFetcher(ref.filename);
+    const rawBlob = await assetFetcher(ref.filename);
+
+    // JSZip returns blobs without correct MIME type, so we need to set it
+    const blob = new Blob([rawBlob], { type: ref.mimeType });
+
     const dataURL = (await blobToDataURL(blob)) as DataURL;
 
     const fileData: BinaryFileData = {
