@@ -1,7 +1,10 @@
 import { CaptureUpdateAction } from "@excalidraw/excalidraw";
 import { compressData } from "@excalidraw/excalidraw/data/encode";
 import { newElementWith } from "@excalidraw/element";
-import { isInitializedImageElement } from "@excalidraw/element";
+import {
+  isInitializedImageElement,
+  isLocalVideoEmbeddable,
+} from "@excalidraw/element";
 import { t } from "@excalidraw/excalidraw/i18n";
 
 import type {
@@ -93,16 +96,22 @@ export class FileManager {
     const addedFiles: Map<FileId, BinaryFileData> = new Map();
 
     for (const element of elements) {
-      const fileData =
-        isInitializedImageElement(element) && files[element.fileId];
+      // Check for both image elements and local video embeddables
+      const fileId = isInitializedImageElement(element)
+        ? element.fileId
+        : isLocalVideoEmbeddable(element)
+        ? element.fileId
+        : null;
+
+      const fileData = fileId && files[fileId];
 
       if (
         fileData &&
         // NOTE if errored during save, won't retry due to this check
         !this.isFileSavedOrBeingSaved(fileData)
       ) {
-        addedFiles.set(element.fileId, files[element.fileId]);
-        this.savingFiles.set(element.fileId, this.getFileVersion(fileData));
+        addedFiles.set(fileId, files[fileId]);
+        this.savingFiles.set(fileId, this.getFileVersion(fileData));
       }
     }
 
@@ -173,11 +182,16 @@ export class FileManager {
    */
   shouldPreventUnload = (elements: readonly ExcalidrawElement[]) => {
     return elements.some((element) => {
-      return (
-        isInitializedImageElement(element) &&
-        !element.isDeleted &&
-        this.savingFiles.has(element.fileId)
-      );
+      if (element.isDeleted) {
+        return false;
+      }
+      // Check for both image elements and local video embeddables
+      const fileId = isInitializedImageElement(element)
+        ? element.fileId
+        : isLocalVideoEmbeddable(element)
+        ? element.fileId
+        : null;
+      return fileId && this.savingFiles.has(fileId);
     });
   };
 

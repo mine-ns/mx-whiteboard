@@ -109,7 +109,6 @@ import {
   loadDesktopUIModePreference,
   setDesktopUIMode,
   isSelectionLikeTool,
-  VIDEO_MIME_TYPES,
 } from "@excalidraw/common";
 
 import {
@@ -251,6 +250,8 @@ import {
   isPointInElement,
   maxBindingDistance_simple,
 } from "@excalidraw/element";
+
+import type { VIDEO_MIME_TYPES } from "@excalidraw/common";
 
 import type { GlobalPoint, LocalPoint, Radians } from "@excalidraw/math";
 
@@ -11303,22 +11304,23 @@ class App extends React.Component<AppProps, AppState> {
       this.files[fileId]?.dataURL || (await getDataURL(videoFile));
 
     // Get actual video dimensions
-    const videoDimensions = await new Promise<{ width: number; height: number }>(
-      (resolve) => {
-        const video = document.createElement("video");
-        video.onloadedmetadata = () => {
-          resolve({ width: video.videoWidth, height: video.videoHeight });
-        };
-        video.onerror = () => {
-          // Fallback to placeholder dimensions if video metadata fails to load
-          resolve({
-            width: placeholderElement.width,
-            height: placeholderElement.height,
-          });
-        };
-        video.src = dataURL;
-      },
-    );
+    const videoDimensions = await new Promise<{
+      width: number;
+      height: number;
+    }>((resolve) => {
+      const video = document.createElement("video");
+      video.onloadedmetadata = () => {
+        resolve({ width: video.videoWidth, height: video.videoHeight });
+      };
+      video.onerror = () => {
+        // Fallback to placeholder dimensions if video metadata fails to load
+        resolve({
+          width: placeholderElement.width,
+          height: placeholderElement.height,
+        });
+      };
+      video.src = dataURL;
+    });
 
     // Calculate new dimensions maintaining aspect ratio
     // Use placeholder width as base and adjust height to match video aspect ratio

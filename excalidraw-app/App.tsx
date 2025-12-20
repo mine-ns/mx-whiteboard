@@ -50,7 +50,10 @@ import {
 import { isElementLink } from "@excalidraw/element";
 import { restore, restoreAppState } from "@excalidraw/excalidraw/data/restore";
 import { newElementWith } from "@excalidraw/element";
-import { isInitializedImageElement } from "@excalidraw/element";
+import {
+  isInitializedImageElement,
+  isLocalVideoEmbeddable,
+} from "@excalidraw/element";
 import clsx from "clsx";
 import {
   parseLibraryTokensFromUrl,
@@ -433,7 +436,11 @@ const ExcalidrawWrapper = () => {
       } else {
         const fileIds =
           data.scene.elements?.reduce((acc, element) => {
+            // Include both image elements and local video embeddables
             if (isInitializedImageElement(element)) {
+              return acc.concat(element.fileId);
+            }
+            if (isLocalVideoEmbeddable(element)) {
               return acc.concat(element.fileId);
             }
             return acc;
@@ -536,9 +543,16 @@ const ExcalidrawWrapper = () => {
           const currFiles = excalidrawAPI.getFiles();
           const fileIds =
             elements?.reduce((acc, element) => {
+              // Include both image elements and local video embeddables
               if (
                 isInitializedImageElement(element) &&
-                // only load and update images that aren't already loaded
+                // only load and update files that aren't already loaded
+                !currFiles[element.fileId]
+              ) {
+                return acc.concat(element.fileId);
+              }
+              if (
+                isLocalVideoEmbeddable(element) &&
                 !currFiles[element.fileId]
               ) {
                 return acc.concat(element.fileId);

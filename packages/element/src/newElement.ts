@@ -173,7 +173,7 @@ export const newEmbeddableElement = (
   return {
     ..._newElementBase<ExcalidrawEmbeddableElement>("embeddable", opts),
     fileId: opts.fileId ?? null,
-    status: opts.fileId ? (opts.status ?? "pending") : undefined,
+    status: opts.fileId ? opts.status ?? "pending" : undefined,
   };
 };
 
