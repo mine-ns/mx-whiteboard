@@ -1,11 +1,11 @@
 # Plan: Export API for JSON + Assets (R2 Cloud Storage)
 
-> **Status:** Planned (not yet implemented)
-> **Use Case:** mx-whiteboard as submodule in mx-dod-form, sending whiteboard data to R2 cloud storage
+> **Status:** Planned (not yet implemented) **Use Case:** mx-whiteboard as submodule in mx-dod-form, sending whiteboard data to R2 cloud storage
 
 ## Overview
 
 Add export/import APIs that separate scene JSON from binary assets (images, videos), enabling:
+
 - Upload assets to R2/S3 cloud storage separately
 - Reference assets by content hash (SHA-256) for deduplication
 - Smaller JSON files without embedded base64 data
@@ -16,6 +16,7 @@ Add export/import APIs that separate scene JSON from binary assets (images, vide
 ## Export Formats
 
 ### 1. Folder Export
+
 ```
 whiteboard-export/
 ├── scene.json              # Elements + appState + file references
@@ -26,6 +27,7 @@ whiteboard-export/
 ```
 
 ### 2. Zip Export
+
 Same structure but packaged as a single `.excalidraw.zip` file.
 
 ---
@@ -40,10 +42,10 @@ Same structure but packaged as a single `.excalidraw.zip` file.
 /** Asset reference (replaces embedded dataURL) */
 export interface AssetReference {
   id: FileId;
-  hash: string;           // SHA-256 content hash
+  hash: string; // SHA-256 content hash
   mimeType: string;
-  size: number;           // bytes
-  filename: string;       // hash + extension, e.g., "a1b2c3.png"
+  size: number; // bytes
+  filename: string; // hash + extension, e.g., "a1b2c3.png"
 }
 
 /** Extended with optional URL (set after upload) */
@@ -58,13 +60,13 @@ export interface ExportedSceneWithAssets {
   source: string;
   elements: readonly ExcalidrawElement[];
   appState: Partial<AppState>;
-  assetReferences: AssetReference[];  // Instead of embedded files
+  assetReferences: AssetReference[]; // Instead of embedded files
 }
 
 /** Individual asset for upload */
 export interface ExportedAsset {
   reference: AssetReference;
-  blob: Blob;             // Raw binary data
+  blob: Blob; // Raw binary data
 }
 
 /** Complete export result */
@@ -82,7 +84,7 @@ export interface ImportResult {
 
 /** Asset resolver - implement this in your app (e.g., mx-dod-form) */
 export interface AssetResolver {
-  resolve: (ref: AssetReference) => Promise<string>;  // Returns dataURL
+  resolve: (ref: AssetReference) => Promise<string>; // Returns dataURL
 }
 ```
 
@@ -266,14 +268,18 @@ export async function saveWhiteboard(excalidrawAPI, whiteboardId: string) {
   const files = excalidrawAPI.getFiles();
 
   // 2. Export with separate assets
-  const { scene, assets } = await exportSceneWithAssets(elements, appState, files);
+  const { scene, assets } = await exportSceneWithAssets(
+    elements,
+    appState,
+    files,
+  );
 
   // 3. Upload assets to R2 and add URLs
   const assetRefsWithUrls: AssetReferenceWithUrl[] = await Promise.all(
     assets.map(async (asset) => {
       const url = await uploadToR2(asset.reference.filename, asset.blob);
       return { ...asset.reference, url };
-    })
+    }),
   );
 
   // 4. Create final scene JSON with URLs
@@ -282,7 +288,7 @@ export async function saveWhiteboard(excalidrawAPI, whiteboardId: string) {
   // 5. Save to Convex
   await convexMutation("whiteboards:save", {
     id: whiteboardId,
-    sceneJson: JSON.stringify(sceneWithUrls)
+    sceneJson: JSON.stringify(sceneWithUrls),
   });
 }
 ```
@@ -303,7 +309,7 @@ function createR2Resolver(): AssetResolver {
       const response = await fetch(ref.url!);
       const blob = await response.blob();
       return blobToDataURL(blob);
-    }
+    },
   };
 }
 
@@ -314,7 +320,10 @@ export async function loadWhiteboard(excalidrawAPI, whiteboardId: string) {
 
   // 2. Import with R2 resolver
   const resolver = createR2Resolver();
-  const { elements, appState, files } = await importSceneWithAssets(sceneJson, resolver);
+  const { elements, appState, files } = await importSceneWithAssets(
+    sceneJson,
+    resolver,
+  );
 
   // 3. Update Excalidraw
   excalidrawAPI.updateScene({ elements, appState });
@@ -327,7 +336,7 @@ export async function loadWhiteboard(excalidrawAPI, whiteboardId: string) {
 ## Files to Create/Modify
 
 | File | Action |
-|------|--------|
+| --- | --- |
 | `packages/excalidraw/data/types.ts` | Add export/import types |
 | `packages/excalidraw/data/exportAssets.ts` | **NEW** - Export & import functions |
 | `packages/excalidraw/data/hash.ts` | **NEW** - SHA-256 utility |
@@ -354,6 +363,7 @@ export async function loadWhiteboard(excalidrawAPI, whiteboardId: string) {
 ### mx-whiteboard provides (storage-agnostic)
 
 **Export Functions:**
+
 ```typescript
 exportSceneWithAssets(elements, appState, files) → SceneExportResult
 exportToFolder(elements, appState, files) → { sceneJson, assets }
@@ -361,12 +371,14 @@ exportToZip(elements, appState, files) → Blob
 ```
 
 **Import Functions:**
+
 ```typescript
 importSceneWithAssets(sceneJson, resolver) → ImportResult
 importFromZip(zipBlob) → ImportResult
 ```
 
 **Utilities:**
+
 ```typescript
 dataURLToBlob(dataURL) → Blob
 blobToDataURL(blob) → Promise<string>
