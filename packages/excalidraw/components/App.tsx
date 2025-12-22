@@ -1293,10 +1293,6 @@ class App extends React.Component<AppProps, AppState> {
     sceneX: number,
     sceneY: number,
   ) {
-    // Video embeddables (local or URL-based) should only activate on double-click, not center click
-    if (el && (isLocalVideoEmbeddable(el) || isVideoUrl(el.link))) {
-      return false;
-    }
     return (
       el &&
       !event.altKey &&
@@ -1627,7 +1623,7 @@ class App extends React.Component<AppProps, AppState> {
                     : POINTER_EVENTS.disabled,
                 }}
               >
-                {isHovered && src?.type !== "localVideo" && (
+                {isHovered && (
                   <div className="excalidraw__embeddable-hint">
                     {t("buttons.embeddableInteractionButton")}
                   </div>
