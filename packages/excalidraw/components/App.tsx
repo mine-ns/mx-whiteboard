@@ -372,6 +372,7 @@ import {
   isImageFileHandle,
   isSupportedImageFile,
   isSupportedVideoFileType,
+  isVideoUrl,
   loadSceneOrLibraryFromBlob,
   normalizeFile,
   parseLibraryJSON,
@@ -1292,8 +1293,8 @@ class App extends React.Component<AppProps, AppState> {
     sceneX: number,
     sceneY: number,
   ) {
-    // Local video embeddables should only activate on double-click, not center click
-    if (el && isLocalVideoEmbeddable(el)) {
+    // Video embeddables (local or URL-based) should only activate on double-click, not center click
+    if (el && (isLocalVideoEmbeddable(el) || isVideoUrl(el.link))) {
       return false;
     }
     return (
@@ -1366,7 +1367,8 @@ class App extends React.Component<AppProps, AppState> {
         (el): el is Ordered<NonDeleted<ExcalidrawIframeLikeElement>> =>
           (isEmbeddableElement(el) &&
             (this.embedsValidationStatus.get(el.id) === true ||
-              isLocalVideoEmbeddable(el))) ||
+              isLocalVideoEmbeddable(el) ||
+              isVideoUrl(el.link))) ||
           isIframeElement(el),
       );
 
@@ -1534,7 +1536,7 @@ class App extends React.Component<AppProps, AppState> {
               } as const;
             }
           } else {
-            // Check for local video embeddable
+            // Check for local video embeddable (file-based)
             if (
               isLocalVideoEmbeddable(el) &&
               this.files[el.fileId] &&
@@ -1543,6 +1545,14 @@ class App extends React.Component<AppProps, AppState> {
               src = {
                 type: "localVideo",
                 dataURL: this.files[el.fileId].dataURL,
+                intrinsicSize: { w: el.width, h: el.height },
+              };
+            } else if (el.link && isVideoUrl(el.link)) {
+              // URL-based video (YouTrack, external links, etc.) - use VideoPlayer directly
+              // HTML5 video element supports both data URLs and HTTP URLs
+              src = {
+                type: "localVideo",
+                dataURL: el.link,
                 intrinsicSize: { w: el.width, h: el.height },
               };
             } else {

@@ -422,12 +422,24 @@ export const maybeParseEmbedSrc = (str: string): string => {
   return str;
 };
 
+/**
+ * Check if a URL points to a video file
+ * Supports URLs with video extensions (.mp4, .webm, .ogg, .mov) or #video fragment
+ */
+const isVideoUrlForEmbed = (url: string): boolean => {
+  return /\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(url) || url.includes('#video');
+};
+
 export const embeddableURLValidator = (
   url: string | null | undefined,
   validateEmbeddable: ExcalidrawProps["validateEmbeddable"],
 ): boolean => {
   if (!url) {
     return false;
+  }
+  // Always allow video URLs - they'll be rendered with VideoPlayer, not iframe
+  if (isVideoUrlForEmbed(url)) {
+    return true;
   }
   if (validateEmbeddable != null) {
     if (typeof validateEmbeddable === "function") {

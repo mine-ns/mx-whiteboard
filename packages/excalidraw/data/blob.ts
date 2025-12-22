@@ -142,6 +142,20 @@ export const isSupportedVideoFile = (
   return isSupportedVideoFileType(type);
 };
 
+/**
+ * Check if a URL points to a video file
+ * Supports:
+ * - URLs with video extensions: .mp4, .webm, .ogg, .mov
+ * - URLs with #video fragment (for API URLs without extensions)
+ */
+export const isVideoUrl = (url: string | null | undefined): boolean => {
+  if (!url) {
+    return false;
+  }
+  // Check for video file extensions or #video fragment marker
+  return /\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(url) || url.includes('#video');
+};
+
 export const loadSceneOrLibraryFromBlob = async (
   blob: Blob | File,
   /** @see restore.localAppState */
