@@ -88,7 +88,30 @@ export const exportSceneWithAssets = async (
       continue;
     }
 
-    const blob = dataURLToBlob(fileData.dataURL);
+    // Validate dataURL before processing
+    if (!fileData.dataURL || !fileData.dataURL.includes(",")) {
+      console.warn(
+        `[exportAssets] Skipping file ${fileId}: invalid dataURL format`,
+        {
+          hasDataURL: !!fileData.dataURL,
+          dataURLPreview: fileData.dataURL?.substring(0, 100),
+          mimeType: fileData.mimeType,
+        },
+      );
+      continue;
+    }
+
+    let blob: Blob;
+    try {
+      blob = dataURLToBlob(fileData.dataURL);
+    } catch (err) {
+      console.warn(
+        `[exportAssets] Skipping file ${fileId}: failed to decode dataURL -`,
+        err,
+      );
+      continue;
+    }
+
     const hash = await sha256(blob);
     const ext = getExtensionFromMimeType(fileData.mimeType);
 
