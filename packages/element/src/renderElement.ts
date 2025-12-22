@@ -1034,6 +1034,19 @@ export const renderElement = (
       }
       break;
     }
+    case "customContent": {
+      // CustomContent elements are rendered via renderCustomContent prop in interactive mode
+      // For static rendering (exports/thumbnails), we render a placeholder frame
+      context.save();
+      context.translate(element.x + appState.scrollX, element.y + appState.scrollY);
+      context.strokeStyle = "#888888";
+      context.lineWidth = 2;
+      context.setLineDash([5, 5]);
+      context.strokeRect(0, 0, element.width, element.height);
+      context.setLineDash([]);
+      context.restore();
+      break;
+    }
     default: {
       // @ts-ignore
       throw new Error(`Unimplemented type ${element.type}`);
