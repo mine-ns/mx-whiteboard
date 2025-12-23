@@ -466,5 +466,7 @@ export const embeddableURLValidator = (
     }
   }
 
-  return !!matchHostname(url, ALLOWED_DOMAINS);
+  // MX-WHITEBOARD: Allow all URLs by default (removed domain whitelist restriction)
+  // Original: return !!matchHostname(url, ALLOWED_DOMAINS);
+  return true;
 };
